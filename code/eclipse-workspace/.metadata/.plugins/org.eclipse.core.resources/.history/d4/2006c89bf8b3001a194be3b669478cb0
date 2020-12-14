@@ -1,0 +1,129 @@
+package test.service;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.*;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CopyItem;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CopyState;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Item;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Reservation;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.TypeItem;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.UserRole;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.UserState;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ReservationService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ReservationServiceImpl;
+import com.inesshasnaoui.bibliotheekbeheersysteem.service.InterfaceDao.CopyItemDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.service.InterfaceDao.ReservationDao;
+
+
+class ReservationServiceTestCase {
+	
+private ReservationService reservationService;
+private ReservationDao reservationDao;
+private CopyItemDao copyItemDao;
+	@BeforeEach
+	void setUp() throws Exception {
+		 reservationDao= mock(ReservationDao.class);
+		 copyItemDao= mock(CopyItemDao.class);
+		this.reservationService= new ReservationServiceImpl(reservationDao,copyItemDao);
+	}
+	@Test
+	void IsItemReservedSuccessTest() {
+		//Arrange
+		Boolean expected = true;
+		int itemId = 5;
+		//Act
+		Boolean actual= reservationService.IsItemReserved(itemId);
+		//Assert
+		Assertions.assertEquals(expected, actual);		
+	}
+
+	@Test
+	void HasUserItemReservedSuccesTest() {
+		//Arrange
+		Date dateReservation = new Date();
+		int userId=1;
+		int itemId =1;
+		int copyId =1;
+		Item item = new Item( 1,1,"title","author",TypeItem.book,"summary",null);	
+		Member member = new Member(1,UserState.blocked,UserRole.member,"username","pass","firstname","lastname","adres","email",65123264);
+		Reservation expected = new Reservation(1,userId,itemId, copyId, dateReservation, item, member,
+				"reserved") ;
+		
+		//Mock
+		when(reservationDao.getReservationForUserOfItem(userId, itemId)).thenReturn(expected);
+		//Act
+		Reservation actual = reservationService.hasUserItemReserved(userId, itemId);
+		//Assert
+		Assertions.assertEquals(expected, actual);
+//		return reservationDao.getReservationForUserOfItem(userId,itemId);	
+	}
+	
+	@Test
+	void BecomesReservationStateForAvailbleCopyInWaitingForLending() {
+		//Arrange
+		Date dateReservation = new Date();
+		 String stateReservation = null;//="waitingForLending";
+		 int userId =1;
+		 int itemId =1;
+		 int copyId =1;
+		 Item item = new Item(1);
+		List <CopyItem>list = new ArrayList<>();
+		CopyItem copyItem= new CopyItem(1,123456,CopyState.available.toString(),item);
+		list.add(copyItem);
+		when (copyItemDao.getAllAvailableCopyItemsForItem(1)).thenReturn(list);
+		Reservation reservationExpected=new Reservation( userId,  itemId,  copyId,  dateReservation,"waitingForLending");
+		//Act
+		Reservation actual =reservationService.makeReservation(itemId, userId);
+		//Assert
+		Assertions.assertEquals(reservationExpected.getStateReservation(), actual.getStateReservation());
+	}
+
+	@Test
+	void BecomesReservationStateForLoanedCopyInWaitingForReturnCopy() {
+		// Arrange
+		Date dateReservation = new Date();
+		String stateReservation = null;// ="waitingForLending";
+		int userId = 1;
+		int itemId = 1;
+		int copyId =1;
+		List<CopyItem> list = new ArrayList<>();
+
+		when(copyItemDao.getAllAvailableCopyItemsForItem(1)).thenReturn(list);
+		Reservation reservationExpected = new Reservation(userId, itemId, copyId,dateReservation, "waitingForReturnCopy");
+		// Act
+		Reservation actual = reservationService.makeReservation(itemId, userId);
+		// Assert
+		Assertions.assertEquals(reservationExpected.getStateReservation(), actual.getStateReservation());
+	}
+	
+	@Test
+	void BecomeStateOfAvailbleCopyReservedAfterReservation(){
+		//Arrange
+				Date dateReservation = new Date();
+				 String stateReservation = null;//="waitingForLending";
+				 int userId =1;
+				 int copyId =1;
+				 Item item =new Item(1);
+				List <CopyItem>list = new ArrayList<>();
+				CopyItem copyItem= new CopyItem(1,1,CopyState.available.toString(),item);
+				list.add(copyItem);
+				when (copyItemDao.getAllAvailableCopyItemsForItem(1)).thenReturn(list);
+				Reservation reservationExpected=new Reservation( userId, item.getId(), copyId, dateReservation,"waitingForLending");
+				//Act
+				Reservation actual = reservationService.makeReservation(item.getId(), userId);
+				//Assert
+				Assertions.assertEquals(reservationExpected.getStateReservation(), actual.getStateReservation());
+	}
+	
+
+}

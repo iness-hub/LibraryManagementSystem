@@ -1,0 +1,114 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Date;
+import java.util.List;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.controller.ManageMemberController.AddMemberListener;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Book;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Category;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Dvd;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Item;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.TypeItem;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.CategoryService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ItemService;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.ManageItemsPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.ManageMembersPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View.PanelEnum;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ConnectSql;
+
+public class ManageItemController {
+
+	private ItemService itemService;
+	private CategoryService categoryService;
+	private View view;
+	private ManageItemsPanel manageItemsPanel;
+	
+
+	public ManageItemController(View view, ItemService itemService,CategoryService categoryService) {
+		super();
+		this.view = view;
+		this.itemService = itemService;
+		this.categoryService =categoryService;
+		this.manageItemsPanel = view.getManageItemsPanel();
+		
+		/*this.manageItemPanel.addItemListener(new AddItemListener());
+		this.manageItemPanel.deleteItemListener(new DeleteItemListener());
+		this.manageItemPanel.searchItemListener(new SearchItemListener());
+		this.manageItemPanel.updateItemListener(new UpdateItemListener());
+		this.addItemPanel.addItemConfirmListener(new AddItemConfirmListener());
+		fillCombo(addItemPanel);*/
+		// this.addItemPanel.addcomboBoxListener(new AddcomboBoxListener());
+
+	}
+
+	
+	class AddItemConfirmListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+
+			Item item = getItemFromAddItemPanel(manageItemsPanel);
+			itemService.insert(item);
+			System.out.println("add item contrl button"+item.getIsbn());
+		}
+	}
+
+	/*
+	 * class AddcomboBoxListener implements ActionListener { public void
+	 * actionPerformed(ActionEvent e) { switch
+	 * (addItemPanel.getCombo().getSelectedItem().toString()) { case "book" :
+	 * view.switchToPanel(PanelEnum.searchItem); break; case "dvd" :
+	 * view.switchToPanel(PanelEnum.updateItem); break; }
+	 * 
+	 * } }
+	 */
+
+	public void fillCombo(ManageItemsPanel manageItemsPanel) {
+
+	 /*addItemPanel.getTypeCombo().addItem(TypeItem.book);
+		addItemPanel.getTypeCombo().addItem(TypeItem.dvd);*/
+		
+	//	addItemPanel.getTypeCombo().setItems(TypeItem.values());
+		List<Category> list=categoryService.getAll();
+	//	for(Category cat : list) {
+		for(int i = 0 ; i < list.size(); i++)	
+			manageItemsPanel.getTypeCombo().addItem(list.get(i).getName().toString());
+		
+		
+	}
+
+	public Item getItemFromAddItemPanel(ManageItemsPanel manageItemsPanel) {
+
+		
+		Item item = null;
+	
+		 int id = 0;
+		 int categoryId;
+		 int typeId;
+		 int isbn =Integer.parseInt(manageItemsPanel.getIsbnTextField().getText());;
+		 String title = manageItemsPanel.getTitelTextField().getText();
+		 String author=manageItemsPanel.getAuthorTextField().getText();
+		 String summary =manageItemsPanel.getSummaryTextField().getText();
+		 
+		 String categoryName = manageItemsPanel.getCategoryCombo().getSelectedItem().toString();
+		 String itemType = manageItemsPanel.getTypeCombo().getSelectedItem().toString();
+		 int barcode =Integer.parseInt(manageItemsPanel.getTextBarcode().getText());
+		 String state = manageItemsPanel.getTextState().getText();
+		
+		 Category category = null;
+		switch (itemType) {
+		case "book":
+			item = new Book(id, 1, 1, isbn, title, author, summary, category);
+			break;
+		case "dvd":
+			item = new Dvd(id, 1, 1, isbn, title, author, summary, category);
+			break;
+		}
+		System.out.println("add item contrl itemISBN"+item.getIsbn());
+		return item;
+	}
+
+}

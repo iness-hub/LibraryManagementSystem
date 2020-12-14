@@ -1,0 +1,5 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service;
+
+public interface RoleUserService {
+
+}

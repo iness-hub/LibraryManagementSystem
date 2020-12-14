@@ -1,0 +1,5 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+public interface ConnectDB {
+
+}

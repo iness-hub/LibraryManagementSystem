@@ -1,0 +1,230 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CopyItem;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Item;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Loan;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.InterfaceDao.ConnectDB;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.InterfaceDao.CopyItemDao;
+
+public class CopyItemDaoDB implements CopyItemDao{
+	private ConnectDB connectDB;
+	
+	public CopyItemDaoDB(ConnectDB connectDB) {
+		super();
+		this.connectDB = connectDB;
+	}
+
+	@Override
+	public CopyItem insert(CopyItem copyItem) {
+		
+		int itemId = copyItem.getItem().getId();
+		int barcode = copyItem.getBarcode();
+		String state = copyItem.getState();
+		boolean active = true;
+		int copyItemId = 0;
+		
+		String query = "INSERT INTO copy";
+		query += "(item_id,barcode,state)";
+		query += "VALUE ('" + itemId + "','" + barcode + "','" + state + "')";
+//		query += "VALUE ('" + itemId + "','" + barcode + "','" + state + "','" +true+")";	
+		copyItemId = connectDB.insertQuery(query);
+		System.out.println("ItemId!" + itemId);
+		System.out.println("barcode!" + barcode);
+		System.out.println("state!" + state);
+		System.out.println("A new copy  was inserted successfully!" + copyItemId);
+		copyItem.setId(copyItemId);
+		
+		return copyItem;
+		
+		
+	}
+
+	@Override
+	public CopyItem update(CopyItem copyItem) {
+		int copyItemId = copyItem.getId();
+		int itemId = copyItem.getItem().getId();
+		int barcode = copyItem.getBarcode();
+		String state = copyItem.getState();
+		
+		String query = "UPDATE copy SET item_id='" + itemId + "'";
+		query += ",barcode='" + barcode + "'";
+		query += ",state='" + state + "'";
+		query += "WHERE id='" + copyItemId + "'";
+		connectDB.executeUpdate(query);
+		return copyItem;
+		}
+
+	@Override
+	public boolean delete(CopyItem copyItem) {
+		String query = "DELETE FROM copy WHERE id =" + copyItem.getId() + " ";
+		int t = connectDB.executeUpdate(query);
+		if (t >= 1)
+			System.out.println("A new user was deleted successfully!" + copyItem.getId());
+		else
+			System.out.println("copyItem" + copyItem.getId() + " not deleted successfully!");
+
+		return (t >= 1);
+	}
+	
+	@Override
+	public CopyItem makeCopyInActive(CopyItem copyItem) {
+		int copyItemId = copyItem.getId();
+		int itemId = copyItem.getItem().getId();
+		String query = "UPDATE copy SET active= false ";
+		query += "WHERE id='" + copyItemId + "'";
+		connectDB.executeUpdate(query);
+		copyItem.setActive(false);
+		return copyItem;
+		}
+
+	@Override
+	public CopyItem get(long id) {
+		String query = "SELECT * FROM copy WHERE id =" + id + " ";
+		query+=	 "AND active= true";
+		ResultSet rs = connectDB.selectQuery(query);
+		CopyItem copyItem = null;
+		try {
+			copyItem = extractCopyItemFromResultSet(rs);
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		return copyItem;
+	}
+	@Override
+	public CopyItem getCopyByBarcode(int barcode) {
+		String query = "SELECT * FROM copy WHERE barcode =" + barcode + " ";
+		query+=	 " AND active= true";
+		ResultSet rs = connectDB.selectQuery(query);
+		CopyItem copyItem = null;
+		try {
+			copyItem = extractCopyItemFromResultSet(rs);
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		return copyItem;
+	}
+
+	@Override
+	public List<CopyItem> getAll() {
+		String query = "SELECT * FROM copy";
+		query += "WHERE active= true";
+		ResultSet rs = connectDB.selectQuery(query);
+		List<CopyItem> listCopyItem = new ArrayList<>();
+		try {
+			listCopyItem = extractListCopyItemFromResultSet(rs);
+			System.out.println(listCopyItem.toString());
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return listCopyItem;
+		
+	}
+	
+	@Override
+	public List<CopyItem> getAllAvailableCopyItemsForItem(int itemId) {
+		String query = "SELECT * FROM copy WHERE item_id ='" + itemId + "' ";
+		query+= "AND state = 'available'";
+		query+=	 " AND active= true";
+		ResultSet rs = connectDB.selectQuery(query);
+		List<CopyItem> listCopyItem = new ArrayList<>();
+		try {
+			listCopyItem = extractListCopyItemFromResultSet(rs);
+			System.out.println(listCopyItem.toString());
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return listCopyItem;
+		
+	}
+
+	
+	@Override
+	public List<CopyItem> getAllCopyItemsForItem(int itemId) {
+		String query = "SELECT * FROM copy WHERE item_id =" + itemId + " ";
+		ResultSet rs = connectDB.selectQuery(query);
+		List<CopyItem> listCopyItem = new ArrayList<>();
+		try {
+			listCopyItem = extractListCopyItemFromResultSet(rs);
+			System.out.println(listCopyItem.toString());
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return listCopyItem;
+	}
+
+	private CopyItem extractCopyItemFromResultSet(ResultSet rs) throws SQLException {
+
+		CopyItem copyItem = null;
+		Item item = null;
+		int id;
+		int itemId;
+		int barcode;
+		String state;
+
+		try {
+			if (rs.next()) {
+
+				id = rs.getInt("id");
+				itemId = rs.getInt("item_id");
+				barcode = rs.getInt("barcode");
+				state = rs.getString("state");
+				item = new Item(itemId);
+				// copyItem = new CopyItem(id, itemId, barcode, state);
+				copyItem = new CopyItem(id, barcode, state, item);
+			}
+
+			return copyItem;
+		} catch (SQLException ex) {
+			return null;
+		}
+	}
+
+	private List<CopyItem> extractListCopyItemFromResultSet(ResultSet rs) throws SQLException {
+
+		List<CopyItem> listCopyItems = new ArrayList<>();
+		CopyItem copyItem = null;
+		Item item = null;
+		int id;
+		int itemId;
+		int barcode;
+		String state;
+
+		try {
+			while (rs.next()) {
+
+				id = rs.getInt("id");
+				itemId = rs.getInt("item_id");
+				barcode = rs.getInt("barcode");
+				state = rs.getString("state");
+				// copyItem = new CopyItem(id, itemId, barcode, state);
+				item = new Item(itemId);
+				copyItem = new CopyItem(id, barcode, state, item);
+				listCopyItems.add(copyItem);
+			}
+			return listCopyItems;
+		} catch (SQLException ex) {
+			return null;
+		}
+	}
+
+	
+
+
+}

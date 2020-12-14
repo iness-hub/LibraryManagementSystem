@@ -1,0 +1,49 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem;
+
+import java.sql.PreparedStatement;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.controller.Controller;
+import com.inesshasanoui.bibliotheekbeheersysteem.controller.LibrarianController;
+import com.inesshasanoui.bibliotheekbeheersysteem.controller.LoginController;
+import com.inesshasanoui.bibliotheekbeheersysteem.controller.ManageItemController;
+import com.inesshasanoui.bibliotheekbeheersysteem.controller.ManageMemberController;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.AuthenticationService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.AuthenticationServiceImpl;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ItemService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ItemServiceImpl;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ServiceClass;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.UserService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.UserServiceImpl;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.AuthenticationDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.AuthenticationDaoDB;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ConnectSql;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.DaoClass;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ItemDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ItemDaoDB;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.LoanDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.UserDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.UserDaoDB;
+
+public class Application {
+
+	private static Controller controller;
+	private static ConnectSql connectSql;
+	private static View view;
+	private static ServiceClass serviceClass;
+	private static DaoClass daoClass;
+	private static LocalInformation localInformation;
+	
+	public static void main(String[] args) {
+		connectSql = new ConnectSql();
+		view = new View();
+		daoClass = new DaoClass(connectSql);
+		serviceClass = new ServiceClass(daoClass);
+		controller = new Controller(view, serviceClass);
+		localInformation = new LocalInformation(serviceClass);
+		
+		
+	}
+
+}

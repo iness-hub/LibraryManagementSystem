@@ -1,0 +1,153 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.model;
+
+import java.util.Date;
+
+public abstract class User {
+	
+private  int id;
+private String state;
+private String username;
+private String password;
+public Person person;
+//private String state;
+
+
+
+public User(int id, int roleId, int stateId, String username, String password, String firstname, String lastname,
+		String adres, String email, int tel) {
+	super();
+	this.id = id;
+	this.roleId = roleId;
+	this.stateId = stateId;
+	this.username = username;
+	this.password = password;
+	this.person= new Person(firstname, lastname,adres, email, tel);
+//	this.state = state;
+
+}
+public User(int id, int roleId, int stateId, Person person,String username, String password) {
+	super();
+	this.id = id;
+	this.roleId = roleId;
+	this.stateId = stateId;
+	this.username = username;
+	this.password = password;
+	this.person= person;
+
+}
+
+public User( int roleId, int stateId, String username, String password, String firstname, String lastname,
+		String adres, String email, int tel) {
+	super();
+	
+	this.roleId = roleId;
+	this.stateId = stateId;
+	this.username = username;
+	this.password = password;
+	this.person= new Person(firstname, lastname,adres, email, tel);
+
+
+}
+public User() {}
+
+
+public int getId() {
+	return id;
+}
+
+
+public int getRoleId() {
+	return roleId;
+}
+
+
+public int getStateId() {
+	return stateId;
+}
+
+
+public String getUsername() {
+	return username;
+}
+
+public String getPassword() {
+	return password;
+}
+
+
+
+
+
+
+protected void itemReserv() {
+	
+}
+protected void itemConsult() {
+	
+}
+
+
+
+ public Person getPerson() {
+	return person;
+}
+
+
+public void setPerson(Person person) {
+	this.person = person;
+}
+
+
+public void setId(int id) {
+	this.id = id;
+}
+
+
+
+
+public void setRoleId(int roleId) {
+	this.roleId = roleId;
+}
+
+
+
+
+public void setStateId(int stateId) {
+	this.stateId = stateId;
+}
+
+
+
+
+public void setUsername(String username) {
+	this.username = username;
+}
+
+
+
+
+public void setPassword(String password) {
+	this.password = password;
+}
+
+
+
+
+
+
+
+
+
+@Override
+ public String toString() {
+	 return "******************User************************"+"\n"+
+ 			 "firstname : " + this.person.getFirstname()+ "\n"+
+			 "lastname: "+ this.person.getLastname() + "\n" +
+			 "tel : " + this.person.getTel() + "\n";
+			 
+				
+ }
+
+
+
+}

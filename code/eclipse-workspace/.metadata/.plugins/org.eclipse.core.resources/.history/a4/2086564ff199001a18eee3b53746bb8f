@@ -1,0 +1,10 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import java.util.ArrayList;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+
+public interface AuthenticationDao {
+	ArrayList<Integer> login(String username, String password);
+	 User register(User user);
+}

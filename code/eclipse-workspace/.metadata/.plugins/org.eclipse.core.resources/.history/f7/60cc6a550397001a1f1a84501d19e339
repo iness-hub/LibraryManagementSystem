@@ -1,0 +1,43 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import java.util.List;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.stateUser;
+
+public class StateUserDaoDB implements StateUserDao{
+private ConnectSql connectSql;
+	
+	public stateUserDaoDB(ConnectSql connectSql) {
+		this.connectSql = connectSql;
+	}
+	@Override
+	public stateUser insert(stateUser obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public stateUser update(stateUser obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean delete(stateUser obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public stateUser get(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<stateUser> getAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

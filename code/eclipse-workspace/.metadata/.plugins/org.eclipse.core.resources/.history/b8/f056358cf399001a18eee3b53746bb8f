@@ -1,0 +1,37 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Person;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ServiceClass;
+
+public class LocalInformation {
+
+	public Member myMemberInfo;
+	private ServiceClass serviceClass;
+	
+	
+	public LocalInformation(ServiceClass serviceClass) {
+		super();
+		this.serviceClass = serviceClass;
+			}
+
+
+	public void generatePersonelMemberInfo(int userId) {
+		
+		User tempUser =(User) serviceClass.getUserService().get(userId);
+		int id= tempUser.getId();
+		 int roleId = tempUser.getRoleId();
+		 int stateId=tempUser.getStateId();
+		 String username= tempUser.getUsername();
+		 String password = tempUser.getPassword();
+		 String firstname = tempUser.getPerson().getFirstname() ;
+		 String lastname = tempUser.getPerson().getLastname();
+		 String adres = tempUser.getPerson().getAdres();
+		 String email = tempUser.getPerson().getEmail();
+		 int tel = tempUser.getPerson().getTel();
+		 
+		myMemberInfo = new Member(roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+	}
+	
+}

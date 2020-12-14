@@ -1,0 +1,14 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.view;
+
+import javax.swing.JPanel;
+
+public class MemberPanel extends JPanel {
+
+	/**
+	 * Create the panel.
+	 */
+	public MemberPanel() {
+
+	}
+
+}

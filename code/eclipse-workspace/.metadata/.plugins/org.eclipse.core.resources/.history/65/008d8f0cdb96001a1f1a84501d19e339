@@ -1,0 +1,82 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.RoleUser;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+
+public class RoleUserDaoDB implements RoleUserDao {
+	private ConnectSql connectSql;
+	
+	public RoleUserDaoDB(ConnectSql connectSql) {
+		this.connectSql = connectSql;
+	}
+	@Override
+	public RoleUser insert(RoleUser roleUser) {
+		int id = 0;
+		String query = "INSERT INTO role";
+		query += "(name)";
+		query += "VALUE ('" + roleUser.getName() + "'"+")";
+		id = connectSql.insertQuery(query);
+		roleUser.setId(id);
+		return roleUser;
+	}
+
+	@Override
+	public RoleUser update(RoleUser obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean delete(RoleUser obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public RoleUser get(long id) {
+		String query = "SELECT * FROM role WHERE id =" + id + " ";
+		ResultSet rs = connectSql.selectQuery(query);
+		RoleUser roleuser = null;
+		try {
+			roleuser = extractRoleUserFromResultSet(rs);
+			
+		} catch (SQLException e) {
+			System.out.println("role user bestaat niet");
+			e.printStackTrace();
+		}
+				
+		return roleUser;
+	}
+
+	@Override
+	public List<RoleUser> getAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	private RoleUser extractRoleUserFromResultSet(ResultSet rs) throws SQLException {
+
+		int id;
+		String name;
+				try {
+			RoleUser roleUser = null;
+			if (rs.next()) {
+
+				id = rs.getInt("id");
+				name = rs.getString("name");
+				
+				roleUser = new RoleUser(id, name);
+			}
+			return roleUser;
+		} catch (SQLException ex) {
+			return null;
+		}
+	}
+}

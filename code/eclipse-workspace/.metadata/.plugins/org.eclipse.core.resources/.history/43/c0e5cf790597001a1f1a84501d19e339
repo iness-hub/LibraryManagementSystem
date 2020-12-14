@@ -1,0 +1,56 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+public class DaoClass {
+
+	private ConnectSql connectSql;
+	private UserDao userDao;
+	private ItemDao itemDao;
+	private AuthenticationDao authenticationDao;
+	private LoanDao loanDao;
+	private CopyItemDao copyItemDao;
+	private CategoryDao categoryDao;
+	private RoleUserDao roleUserDao;
+	private StateUserDao stateUserDao;
+	public DaoClass(ConnectSql connectSql) {
+		
+		this.connectSql=connectSql;
+		this.userDao = new UserDaoDB(connectSql);
+		this.itemDao = new ItemDaoDB(connectSql);
+		this.copyItemDao = new CopyItemDaoDB(connectSql);
+		this.authenticationDao = new AuthenticationDaoDB(connectSql);
+		this.loanDao = new LoanDaoDB(connectSql);
+		this.categoryDao = new CategoryDaoDB(connectSql);
+		this.roleUserDao = new RoleUserDaoDB(connectSql);
+		this.stateUserDao = new StateUserDaoDB(connectSql);
+		
+	}
+	public ConnectSql getConnectSql() {
+		return connectSql;
+	}
+	public UserDao getUserDao() {
+		return userDao;
+	}
+	public ItemDao getItemDao() {
+		return itemDao;
+	}
+	public CopyItemDao getCopyItemDao() {
+		return copyItemDao;
+	}
+	public AuthenticationDao getAuthenticationDao() {
+		return authenticationDao;
+	}
+	public LoanDao getLoanDao() {
+		return loanDao;
+	}
+	public CategoryDao getCategoryDao() {
+		return categoryDao;
+	}
+	public RoleUserDao getRoleUserDao() {
+		return roleUserDao;
+	}
+	public void setRoleUserDao(RoleUserDao roleUserDao) {
+		this.roleUserDao = roleUserDao;
+	}
+	
+}
+

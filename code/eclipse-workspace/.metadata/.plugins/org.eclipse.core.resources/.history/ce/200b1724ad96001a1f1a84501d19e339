@@ -1,0 +1,167 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.controller.ManageItemController.AddItemListener;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Constants;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Item;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Loan;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Operation;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ItemService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.LoanService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ServiceClass;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.UserService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.exception.CopyAlreadyReturnedException;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.exception.LoanException;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.AddLoanPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.ManageLoanPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.RenewLoanPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.ReturnCopyItemPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View.PanelEnum;
+
+public class ManageLoanController {
+	private ManageLoanPanel manageLoanPanel;
+	private AddLoanPanel addLoanPanel;
+	private ReturnCopyItemPanel returnCopyItemPanel;
+	private RenewLoanPanel renewLoanPanel;
+	private LoanService loanService;
+	private UserService userService;
+	private ItemService itemService;
+	private View view;
+
+	public ManageLoanController(View view, LoanService loanService,UserService userService,ItemService itemService) {
+		super();
+		this.view = view;
+		this.addLoanPanel = view.getAddLoanPanel();
+		this.manageLoanPanel=view.getManageLoanPanel();
+		this.returnCopyItemPanel=view.getReturnCopyItemPanel();
+		this.renewLoanPanel=view.getRenewLoanPanel();
+		this.loanService = loanService;
+		this.userService = userService;
+		this.itemService = itemService;
+		this.manageLoanPanel.addLoanListener(new AddLoanListener());
+		this.addLoanPanel.addLoanListener(new AddConfirmLoan());
+		this.addLoanPanel.addIdMemberTextFieldListener(new idMemberTextFieldListener());
+		this.manageLoanPanel.addReturnLoanListener(new AddReturnCopyItemListener());
+		this.manageLoanPanel.addRenewLoanListener(new AddRenewLoanListener());
+		this.returnCopyItemPanel.returnCopyItemListener(new ConfirmReturnCopyItemListener());
+		this.renewLoanPanel.addConfirmRenewLoanListener(new AddConfirmRenewLoanListener());
+	}
+	
+	class AddLoanListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			view.switchToPanel(PanelEnum.addLoan);
+
+		}
+	}
+	class AddConfirmLoan implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			int copyId = GetIdCopyItemrFromPanelLoan(addLoanPanel);
+			int userId = GetIdUserFromPanelLoan(addLoanPanel);
+				
+			System.out.println("add button controller");
+		
+			try {
+				loanService.loanCopyItemToMember(copyId, userId);
+			} catch (LoanException e1) {
+				// messageBox met error vermelding
+				view.messageAlertBox(e1.getMessage());
+			}
+			
+		}
+	}
+	class AddRenewLoanListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			view.switchToPanel(PanelEnum.renewLoan);
+
+		}
+	}
+	class AddConfirmRenewLoanListener implements ActionListener  {
+		public void actionPerformed(ActionEvent e) {
+			int copyId = GetIdCopyIdFromPanelRenewLoan(renewLoanPanel);
+			try {
+				loanService.renewLoanCopyItem(copyId);
+			} catch (LoanException e1) {
+				// TODO Auto-generated catch block
+				view.messageAlertBox(e1.getMessage());
+			} 
+	}
+}
+	
+	class AddReturnCopyItemListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			view.switchToPanel(PanelEnum.returnCopy);
+
+		}
+	}
+	class ConfirmReturnCopyItemListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			int copyId = GetIdCopyItemrFromPanelReturnLoan(returnCopyItemPanel);
+			try {
+				loanService.returnCopyItem(copyId);
+			} catch (CopyAlreadyReturnedException e1) {
+				// TODO Auto-generated catch block
+				view.messageAlertBox(e1.getMessage());
+			}
+		}
+	}
+	class idMemberTextFieldListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int id = GetIdUserFromPanelLoan(addLoanPanel);
+			User user = userService.get(id);
+			System.out.println(user + "get user from id");
+			
+
+		}
+
+	}
+	
+	class idCopyItemTextFieldListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int id = GetIdUserFromPanelLoan(addLoanPanel);
+			Item item= itemService.get(id);
+			System.out.println(item + "get user from item");
+			
+
+		}
+
+	}
+
+public int GetIdUserFromPanelLoan(AddLoanPanel addLoanPanel) {
+	
+	return Integer.parseInt(addLoanPanel.getIdMember().getText());
+	
+}
+public int GetIdCopyItemrFromPanelLoan(AddLoanPanel addLoanPanel) {
+	
+	return Integer.parseInt(addLoanPanel.getIdCopy().getText());
+	
+}
+public int GetIdCopyItemrFromPanelReturnLoan(ReturnCopyItemPanel returnCopyItemPanel) {
+	return  Integer.parseInt(returnCopyItemPanel.getCopyId().getText());
+}
+
+
+public int GetIdCopyIdFromPanelRenewLoan(RenewLoanPanel renewLoanPanel) {
+	return  Integer.parseInt(renewLoanPanel.getTextCopyId().getText());
+	}
+
+
+public Date addDays(Date date, int nbDay) { 
+	  Calendar cal = Calendar.getInstance(); 
+	  cal.setTime(date);  //setTime(date.getTime());
+	  cal.add(Calendar.DATE, nbDay);
+	  return cal.getTime();
+	}
+}

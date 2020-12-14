@@ -1,0 +1,21 @@
+1588019743146	Delete element
+1588066688776	Move compilation unit
+1588244437955	Delete element
+1588247331183	Rename type 'panelEnum'
+1588248296592	Rename field 'deleteMemberFrame'
+1588248345679	Rename local variable 'manageMemberFrame'
+1588248405292	Rename local variable 'addMemberFrame'
+1588248803794	Rename field 'addMemberFrame'
+1588249022076	Rename field 'librarianFrame'
+1588249101610	Rename field 'manageMemberFrame'
+1588249132914	Rename field 'manageItemFrame'
+1588249160580	Rename field 'manageLoanFrame'
+1588249188056	Rename field 'reportFrame'
+1588249220443	Rename local variable 'librarianFrame'
+1588255493072	Rename enum constant 'report'
+1588280574869	Rename type 'NewItemPanel'
+1588281684879	Rename field 'btnAdd'
+1588288099841	Delete element
+1588288126536	Delete element
+1588288132020	Delete element
+1588288194347	Delete element

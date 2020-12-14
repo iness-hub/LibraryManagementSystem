@@ -1,0 +1,308 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.TextEvent;
+import java.awt.event.TextListener;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+
+import javax.swing.JTextField;
+
+//import com.inesshasanoui.bibliotheekbeheersysteem.controller.AddMemberController.AddMemberListener;
+import com.inesshasanoui.bibliotheekbeheersysteem.controller.LibrarianController.ManageMemberListener;
+import com.inesshasanoui.bibliotheekbeheersysteem.controller.LoginController.LoginListener;
+import com.inesshasanoui.bibliotheekbeheersysteem.controller.ManageMemberController.AddMemberListener;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Category;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.RoleUser;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.StateUser;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.RoleUserService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.StateUserService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.UserService;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.AddItemPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.DeleteMemberPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.ManageMemberPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.ManageMembersPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.UpdateMemberPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View.PanelEnum;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ConnectSql;
+
+import com.mysql.jdbc.PreparedStatement;
+
+public class ManageMemberController {
+
+//	private ManageMemberPanel manageMemberPanel;
+	private ManageMembersPanel manageMembersPanel;
+	//private AddMemberPanel addMemberPanel;
+	private DeleteMemberPanel deleteMemberPanel;
+	private UpdateMemberPanel updateMemberPanel;
+	private UserService userService;
+	private RoleUserService roleUserService;
+	private StateUserService stateUserService;
+	private View view;
+
+	public ManageMemberController(View view, UserService userService, RoleUserService roleUserService,StateUserService stateUserService) {
+		super();
+		this.view = view;
+		this.userService = userService;
+		this.roleUserService=roleUserService;
+		this.stateUserService=stateUserService;
+	this.manageMembersPanel = view.getManageMembersPanel();
+		this.deleteMemberPanel = view.getDeleteMemberPanel();
+		fillComboRole(this.manageMembersPanel);
+		fillComboState(this.manageMembersPanel);
+
+		this.manageMembersPanel.addcomboBoxRoleListener(new AddcomboBoxRoleListener());
+		this.manageMembersPanel.addcomboBoxStateListener(new AddcomboBoxStateListener());
+		this.manageMembersPanel.addMemberListener(new AddMemberListener());
+		this.manageMembersPanel.addTextIdUserListener(new IdUserTextFieldListener());
+		this.manageMembersPanel.addConsultListener(new AddConsultListener());
+		this.manageMembersPanel.addUpdateMemberListener(new AddUpdateMemberListener());
+		this.manageMembersPanel.addDeleteMemberListener(new AddDeleteMemberListener());
+	//	this.updateMemberPanel = view.getUpdateMemberPanel();
+	//	this.updateMemberPanel.idTextFieldListener(new IdTextFieldListener());
+	//	this.manageMemberPanel.addMemberListener(new AddMemberListener());
+	//	this.manageMemberPanel.deleteMemberListener(new DeleteMemberListener());
+	//	this.addMemberPanel.addConfirmMemberListener(new ConfirmAddMemberListener());
+//		this.updateMemberPanel.confirmUpdateMemberListener(new ConfirmUpdateMemberListener());
+//		this.deleteMemberPanel.deleteConfirmListener(new ConfirmDeleteMemberListener());
+	//	this.manageMemberPanel.updateMemberListener(new UpdateMemberListener());
+		
+	}
+
+	class AddMemberListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			User user = GetUserFromManageMembersPanel(manageMembersPanel);
+			userService.insert(user);
+			System.out.println("add button");
+
+		}
+	}
+
+	class AddConsultListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			
+			User user =null;// new Member();
+			user = GetUserFromManageMembersPanel(manageMembersPanel);
+			userService.update(user);
+			System.out.println("button update member controller");
+		}
+	}
+	
+	
+	class DeleteMemberListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			view.switchToPanel(PanelEnum.deleteMember);
+
+		}
+	}
+
+	
+
+	class AddcomboBoxRoleListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+	
+		int roleId=Integer.parseInt(manageMembersPanel.getComboBoxRole().getSelectedItem().toString());
+		RoleUser roleUser= roleUserService.get(roleId);
+		String nameRoleUser= roleUser.getName();
+		manageMembersPanel.getTextRoleUser().setText(nameRoleUser); 
+		}
+	}
+		
+	class AddcomboBoxStateListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			int stateId=Integer.parseInt(manageMembersPanel.getComboBoxState().getSelectedItem().toString());
+			StateUser stateUser= stateUserService.get(stateId);
+			String nameStateUser= stateUser.getName();
+			manageMembersPanel.getTextStateUser().setText(nameStateUser); 
+		}
+	}
+	
+	
+	public User GetUserFromManageMembersPanel(ManageMembersPanel manageMembersPanel) {
+		
+			int id= Integer.parseInt(manageMembersPanel.getTextIdUser().getText());
+			String username =manageMembersPanel.getTextUsername().getText(); 
+			String password =manageMembersPanel.getTextPassword().getText(); 
+			String firstname =manageMembersPanel.getTextFirstname().getText(); 
+			String lastname =manageMembersPanel.getTextLastname().getText(); 
+			String adres=manageMembersPanel.getTextAdres().getText(); 
+			String email =manageMembersPanel.getTextEmail().getText();
+			int tel =Integer.parseInt(manageMembersPanel.getTextTel().getText());
+			int roleId = Integer.parseInt(manageMembersPanel.getComboBoxRole().getSelectedItem().toString());
+			int stateId =Integer.parseInt(manageMembersPanel.getComboBoxState().getSelectedItem().toString());
+			User user = new Member( id,roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+			
+			return user;
+		}
+	
+	
+	public void fillComboRole(ManageMembersPanel manageMembersPanel) {
+		List<RoleUser> list =roleUserService.getAll();
+		System.out.println(list.toString());
+			for(int i = 0 ; i < list.size(); i++)	
+			//	manageMembersPanel.getComboBoxRole().addItem(list.get(i).getName().toString());
+				manageMembersPanel.getComboBoxRole().addItem(list.get(i).getId());
+			
+	}
+
+	public void fillComboState(ManageMembersPanel manageMembersPanel) {
+		List<StateUser> list = stateUserService.getAll();
+		System.out.println(list.toString());
+		for (int i = 0; i < list.size(); i++) 
+	//	manageMembersPanel.getComboBoxState().addItem(list.get(i).getName().toString());
+			manageMembersPanel.getComboBoxState().addItem(list.get(i).getId());
+
+	}
+
+	
+	class IdUserTextFieldListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int id = Integer.parseInt(manageMembersPanel.getTextIdUser().getText());
+			User user = userService.get(id);
+			System.out.println(user + "get user from id");
+			setManageMembersPanelFromUser(manageMembersPanel, user);
+
+		}
+	
+	}
+		public void setManageMembersPanelFromUser(ManageMembersPanel manageMembersPanel, User user) {
+
+			manageMembersPanel.getTextUsername().setText(user.getUsername());
+			manageMembersPanel.getTextPassword().setText(user.getPassword());
+			manageMembersPanel.getTextFirstname().setText(user.getPerson().getFirstname());
+			manageMembersPanel.getTextLastname().setText(user.getPerson().getLastname());
+			manageMembersPanel.getTextAdres().setText(user.getPerson().getAdres());
+			manageMembersPanel.getTextEmail().setText(user.getPerson().getEmail());
+		//	manageMembersPanel.getTextTel().setText(user.getPerson().getTel().toString());
+		
+		}
+	
+	
+	class AddUpdateMemberListener implements ActionListener {
+		@Override
+	public void actionPerformed(ActionEvent e) {
+			
+			int id = Integer.parseInt(manageMembersPanel.getTextIdUser().getText());
+			User user = userService.get(id);
+			}
+		}
+	
+	
+	class AddDeleteMemberListener implements ActionListener {
+		@Override
+	public void actionPerformed(ActionEvent e) {
+	
+		User user = GetUserFromManageMembersPanel( manageMembersPanel);
+		user =userService.update(user);
+		System.out.println(user.getId() + "get user from id");
+	//	setManageMembersPanelFromUser(manageMembersPanel, user);
+
+	}
+	
+	}
+	////////////////////////////////////////////////////
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	class ConfirmDeleteMemberListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+
+			User user = GetUserFromFrameDelete(deleteMemberPanel);
+			userService.delete(user);
+			System.out.println("delete button");
+		}
+
+	}
+
+	class ConfirmUpdateMemberListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+
+			User user =null;// new Member();
+			user = GetUserFromUpdatePanel(updateMemberPanel);
+			userService.update(user);
+			System.out.println("button update member controller");
+		}
+	}
+
+	class IdTextFieldListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int id = getIdUserFromUpdatePanel(updateMemberPanel);
+			User user = userService.get(id);
+			System.out.println(user + "get user from id");
+			setUpdatePanelFromUser(updateMemberPanel, user);
+
+		}
+
+	}
+
+
+	
+
+
+	public User GetUserFromFrameDelete(DeleteMemberPanel deleteMemberPanel) {
+		User user = new Member();
+		user.setId(Integer.parseInt(deleteMemberPanel.getTextIdMember().getText()));
+		System.out.println("button delete");
+		return user;
+	}
+
+	public User GetUserFromUpdatePanel(UpdateMemberPanel updateMemberPanel) {
+	
+		int id= Integer.parseInt(updateMemberPanel.getTextId().getText());
+		String username =updateMemberPanel.getTextUsername().getText(); 
+		String password =updateMemberPanel.getTextPassword().getText(); 
+		String firstname =updateMemberPanel.getTextFirstname().getText(); 
+		String lastname =updateMemberPanel.getTextLastname().getText(); 
+		String adres=updateMemberPanel.getTextAdres().getText(); 
+		String email =updateMemberPanel.getTextEmail().getText();
+		int tel =Integer.parseInt(updateMemberPanel.getTextTel().getText());
+		int roleId =0;
+		int stateId =0;
+		String state = null;
+		User user = new Member(id, roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+		System.out.println(user+ " from update panel");
+		return user;
+	}
+
+	public int getIdUserFromUpdatePanel(UpdateMemberPanel updateMemberPanel) {
+		return (Integer.parseInt(updateMemberPanel.getTextId().getText()));
+	}
+
+	public void setUpdatePanelFromUser(UpdateMemberPanel updateMemberPanel, User user) {
+
+		updateMemberPanel.getTextUsername().setText(user.getUsername());
+		updateMemberPanel.getTextPassword().setText(user.getPassword());
+		updateMemberPanel.getTextFirstname().setText(user.getPerson().getFirstname());
+		updateMemberPanel.getTextLastname().setText(user.getPerson().getLastname());
+		updateMemberPanel.getTextAdres().setText(user.getPerson().getAdres());
+		updateMemberPanel.getTextEmail().setText(user.getPerson().getEmail());
+	}
+	
+	
+}
+	

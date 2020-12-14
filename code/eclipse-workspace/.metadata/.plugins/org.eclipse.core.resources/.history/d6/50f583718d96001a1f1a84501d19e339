@@ -1,0 +1,10 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service.exception;
+
+public class CopyNotAvailable extends LoanException {
+
+	public CopyNotAvailable() {
+		super("copy is niet beschikbaar uitgeleend");
+		// TODO Auto-generated constructor stub
+	}
+
+}

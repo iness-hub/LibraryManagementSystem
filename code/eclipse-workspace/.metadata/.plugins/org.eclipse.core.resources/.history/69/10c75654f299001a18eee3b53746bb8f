@@ -1,0 +1,50 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+
+public class AuthenticationDaoDB implements AuthenticationDao {
+	private ConnectSql connectSql;
+	
+	
+	
+	public AuthenticationDaoDB(ConnectSql connectSql) {
+		super();
+		this.connectSql = connectSql;
+	}
+
+	@Override
+	public User login(String username, String password) {
+		
+		String query = "SELECT * FROM USER";
+		query+=" where username='"+username.toString()+"'";
+		query+=	 " and password='"+password.toString()+"'";
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		 ResultSet rs=connectSql.selectQuery(query); 
+		try {
+			while (rs.next()) {
+			ids.add(rs.getInt("id")) ;	
+			ids.add(rs.getInt("role_id")) ;
+				
+			}
+		} catch (SQLException e1) {
+			
+			e1.printStackTrace();
+			System.out.println("niet gevonden");
+			
+		}
+
+	return (ids);	
+		
+	}
+
+	@Override
+	public User register(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

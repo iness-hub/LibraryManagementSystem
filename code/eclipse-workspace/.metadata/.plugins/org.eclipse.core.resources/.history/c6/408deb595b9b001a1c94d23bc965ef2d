@@ -1,0 +1,8 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+
+public interface AuthenticationService {
+	User login(String username, String password);
+	 User register(User user);
+}

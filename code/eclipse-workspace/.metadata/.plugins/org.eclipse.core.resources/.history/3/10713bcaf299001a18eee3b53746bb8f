@@ -1,0 +1,54 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.AuthenticationService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.UserService;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.LibrarianPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.LoginPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View.PanelEnum;
+import com.inesshasnaoui.bibliotheekbeheersysteem.Application;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ConnectSql;
+
+public class LoginController {
+
+	private LoginPanel loginPanel;
+	private View view;
+//	private UserService userService;
+	private AuthenticationService authenticationService;
+
+	public LoginController(View view, AuthenticationService authenticationService) {
+		super();
+		this.view = view;
+		this.authenticationService = authenticationService;
+		this.loginPanel = view.getLoginPanel();
+		this.loginPanel.addLoginListener(new LoginListener());
+
+	}
+
+	class LoginListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			String usernameLogin = loginPanel.getUsername().getText();
+			String passwordLogin = loginPanel.getPasswordField().getText().toString();
+		//	User user = authenticationService.login(usernameLogin, passwordLogin);
+			if (authenticationService.login(usernameLogin, passwordLogin).getId()==1) {
+				view.switchToPanel(PanelEnum.librarian);
+				
+				Application.localInformation.generatePersonelMemberInfo(userId); ;
+				
+			} else if (authenticationService.login(usernameLogin, passwordLogin) == 2) {
+				view.switchToPanel(PanelEnum.member);
+				
+				
+			}
+				
+							
+		}
+	}
+
+}

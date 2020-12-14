@@ -1,0 +1,8 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+
+public interface AuthenticationDao {
+	Arraylist<int> login(String username, String password);
+	 User register(User user);
+}

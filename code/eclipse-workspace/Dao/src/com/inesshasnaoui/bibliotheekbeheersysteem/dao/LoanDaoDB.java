@@ -1,0 +1,218 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CopyItem;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Loan;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Operation;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+
+
+public class LoanDaoDB implements LoanDao {
+	private ConnectDB connectDB;
+	public LoanDaoDB(ConnectDB connectDB) {
+		this.connectDB=connectDB;
+	}
+	
+	@Override
+	public Loan insert(Loan loan) {
+		
+		int loanId = 0;
+		int userId = loan.getUserId();
+		int copyId = loan.getCopyId();
+		Float penality;
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String operationDate = dateFormat.format(loan.getDateLoaned());
+		String returnDate = dateFormat.format(loan.getReturnDate());
+		
+		String query = "INSERT INTO loan";
+		query += "(user_id,copy_id,date_loaned,return_date)";
+		query += "VALUE ('" + userId + "','" + copyId + "','" + operationDate + "','" + returnDate + "')";
+		loanId = connectDB.insertQuery(query);
+		loan.setId(loanId);
+		
+		return loan;
+	}
+
+	@Override
+	public Loan update(Loan loan) {
+		int loanId = loan.getId();
+		int userId = loan.getUserId();
+		int copyId = loan.getCopyId();
+		String dateReturned;
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String operationDate =dateFormat.format(loan.getDateLoaned());
+		String returnDate = dateFormat.format(loan.getReturnDate());
+		if (loan.getReturnedDate()!=null) {
+		
+			dateReturned ="'"+dateFormat.format(loan.getReturnedDate());
+		dateReturned+= "'";
+			}else {
+			dateReturned ="NULL";
+		}
+		Float penality = loan.getPenality();
+		String query = "UPDATE loan SET user_id='" + userId+ "'";
+		query += ",copy_id='" +copyId + "'";
+		query += ",date_Loaned='" + operationDate + "'";
+		query += ",return_Date='" + returnDate + "'";
+			query += ",date_Returned=" + dateReturned + "";
+		query += ",penality='" + penality + "'";
+		query += "WHERE id='" + loanId + "'";
+		System.out.println(query);
+		connectDB.executeUpdate(query);
+		return loan;
+	}
+
+	@Override
+	public boolean delete(Loan loan) {
+		String query = "DELETE FROM loan WHERE id =" + loan.getId() + " ";
+		int t = connectDB.executeUpdate(query);
+		if (t >= 1)
+			System.out.println("A new loan was deleted successfully!" + loan.getId());
+		else
+			System.out.println("loan" + loan.getId() + " not deleted successfully!");
+
+		return (t >= 1);
+		
+	}
+
+	@Override
+	public Loan get(long id) {
+		String query = "SELECT * FROM loan  WHERE id =" + id + " ";
+		ResultSet rs = connectDB.selectQuery(query);
+		Loan loan = null;
+		try {
+			loan = extractLoanFromResultSet(rs);
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		return loan;
+	}
+
+	@Override
+	public List<Loan> getAll() {
+		String query = "SELECT * FROM loan ";
+		List<Loan>  listLoan= new ArrayList<>();
+		ResultSet rs = connectDB.selectQuery(query);
+		
+		try {
+			listLoan = extractListLoanFromResultSet(rs);
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return listLoan;
+	}
+
+
+	private Loan extractLoanFromResultSet(ResultSet rs) throws SQLException {
+	
+		Loan loan = null;
+		int id;
+		int userId;
+		int copyId;
+		Date operationDate;
+		Date returnDate;
+		Date returnedDate;
+		Float penality;
+		
+		try {
+			if (rs.next()) {
+
+				id = rs.getInt("id");
+				userId = rs.getInt("user_id");
+				copyId = rs.getInt("copy_id");
+				operationDate=rs.getDate("date_loaned");
+				returnDate = rs.getDate("return_date");
+				returnedDate = rs.getDate("date_returned");
+				penality = rs.getFloat("penality");
+				loan = new Loan(id,userId, copyId, operationDate, returnDate, returnedDate, penality);
+			}
+			return loan;
+		} catch (SQLException ex) {
+			return null;
+		}
+	}
+
+	
+	private List<Loan> extractListLoanFromResultSet(ResultSet rs) throws SQLException {
+		List<Loan>  listLoan= new ArrayList<>();
+		Loan loan = null;
+		int id;
+		int userId;
+		int copyId;
+		Date operationDate;
+		Date returnDate;
+		Date returnedDate;
+		Float penality;
+		
+		try {
+			while (rs.next()) {
+				id = rs.getInt("id");
+				userId = rs.getInt("user_id");
+				copyId = rs.getInt("copy_id");
+				operationDate=rs.getDate("date_loaned");
+				returnDate = rs.getDate("return_date");
+				returnedDate = rs.getDate("date_returned");
+				penality = rs.getFloat("penality");
+				loan = new Loan(id,userId, copyId, operationDate, returnDate, returnedDate, penality);
+				listLoan.add(loan);
+			}
+			return listLoan;
+		} catch (SQLException ex) {
+			return null;
+		}
+	}
+
+	@Override
+	public List<Loan> getCurrentLoans(int userId) {
+		
+		String query = "SELECT * FROM loan WHERE( user_id =" + userId + ")";
+		query += "AND (date_returned  IS NULL)";
+		List<Loan>  listLoan= new ArrayList<>();
+		ResultSet rs = connectDB.selectQuery(query);
+		
+		try {
+			listLoan = extractListLoanFromResultSet(rs);
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return listLoan;
+		}
+
+	@Override
+	public int countCurrentLoans(int userId) {
+		return getCurrentLoans(userId).size();
+		}
+
+	@Override
+	public Loan getLoanedcopyItem(int copyId) {
+		String query = "SELECT * FROM loan WHERE (copy_id =" + copyId + ")AND (date_returned IS NULL )  ";
+		ResultSet rs = connectDB.selectQuery(query);
+		Loan loan = null;
+		try {
+			loan = extractLoanFromResultSet(rs);
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		return loan;
+		
+	}
+		
+}

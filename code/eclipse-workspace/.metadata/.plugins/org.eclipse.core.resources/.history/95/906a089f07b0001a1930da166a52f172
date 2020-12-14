@@ -1,0 +1,16 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.service.InterfaceDao;
+
+import java.util.List;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Loan;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.CrudDao;
+
+public interface UserDao extends CrudDao<User> {
+	
+	// checkStateUser
+	//getTotalItemsCheckedOut
+//	List<Loan>getCurrentLoans(int userId);
+	 User get(String firstname,String lastname);
+}

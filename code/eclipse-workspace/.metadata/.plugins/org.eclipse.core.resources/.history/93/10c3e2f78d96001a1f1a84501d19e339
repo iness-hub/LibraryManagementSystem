@@ -1,0 +1,5 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service.exception;
+
+public class MemberNotActiveException {
+
+}

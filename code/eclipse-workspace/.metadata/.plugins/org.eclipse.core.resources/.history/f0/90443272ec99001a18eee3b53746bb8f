@@ -1,0 +1,22 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+
+public class LocalInformation {
+
+	public Member myMemberInfo;
+	private SeviceClass seviceClass;
+	
+	
+	public LocalInformation(SeviceClass seviceClass) {
+		super();
+		this.seviceClass = seviceClass;
+	}
+
+
+	public void generatePersonelMemberInfo() {
+		
+		
+	}
+	
+}

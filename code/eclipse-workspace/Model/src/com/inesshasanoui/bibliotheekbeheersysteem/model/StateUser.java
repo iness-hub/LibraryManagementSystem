@@ -1,0 +1,41 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.model;
+
+import java.util.ArrayList;
+
+public class StateUser {
+	
+	private String name;
+	private ArrayList<User> users;
+
+	public StateUser(int id, String name, ArrayList<User> users) {
+		super();
+	
+		this.name = name;
+		this.users = users;
+	}
+
+	public StateUser(String name) {
+		super();
+	
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public ArrayList<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(ArrayList<User> users) {
+		this.users = users;
+	}
+
+	
+	
+}

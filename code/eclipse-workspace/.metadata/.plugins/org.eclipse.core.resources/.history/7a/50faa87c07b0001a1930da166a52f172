@@ -1,0 +1,10 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Category;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CategoryItem;
+import com.inesshasnaoui.bibliotheekbeheersysteem.service.InterfaceDao.CrudDao;
+
+public interface CategoryDao extends CrudDao<Category> {
+	 Category get(CategoryItem name);
+
+}

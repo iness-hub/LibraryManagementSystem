@@ -1,0 +1,191 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.function.Function;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Librarian;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Loan;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Person;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View.PanelEnum;
+
+public class UserDaoDB implements UserDao {
+	private ConnectSql connectSql;
+
+	public UserDaoDB(ConnectSql connectSql) {
+		this.connectSql = connectSql;
+	}
+
+	@Override
+	public User insert(User user) {
+		int userId = 0;
+		String query = "INSERT INTO user";
+		query += "(state,username,password,firstname,lastname,email,tel)";
+		query += "VALUE (1,2,'" + user.getUsername() + "','" + user.getPassword() + "','" + user.getPerson().getFirstname() + "','"
+				+ user.getPerson().getLastname() + "','" + user.getPerson().getEmail() + "',NULL)";
+		userId = connectSql.insertQuery(query);
+		System.out.println("A new user was inserted successfully!" + userId);
+		user.setId(userId);
+		System.out.println("add User");
+		System.out.println(user.getId());
+		return user;
+	}
+
+	@Override
+	public User update(User user) {
+		String query = "UPDATE user SET firstname='" + user.getPerson().getFirstname().toString() + "'";
+		query += ",lastname='" + user.getPerson().getLastname().toString() + "'";
+		query += ",username='" + user.getUsername().toString() + "'";
+		query += ",password='" + user.getPassword().toString() + "'";
+		query += "WHERE id='" + user.getId() + "'";
+		connectSql.executeUpdate(query);
+		System.out.println(user);
+		return user;
+	}
+
+	@Override
+	public boolean delete(User user) {
+		String query = "DELETE FROM user WHERE id =" + user.getId() + " ";
+		int t = connectSql.executeUpdate(query);
+		if (t >= 1)
+			System.out.println("A new user was deleted successfully!" + user.getId());
+		else
+			System.out.println("User" + user.getId() + " not deleted successfully!");
+
+		return (t >= 1);
+	}
+
+	@Override
+	public User get(long id) {
+		String query = "SELECT * FROM user WHERE id =" + id + " ";
+		ResultSet rs = connectSql.selectQuery(query);
+		User user = null;
+		try {
+		// if(	rs.getFetchSize() >0)
+			user = extractUserFromResultSet(rs);
+			System.out.println(user.toString());
+		} catch (SQLException e) {
+			System.out.println("user bestaat niet");
+			e.printStackTrace();
+		}
+				
+		return user;
+	}
+
+	@Override
+	public List<User> getAll() {
+		String query = "SELECT * FROM user";
+		ResultSet rs = connectSql.selectQuery(query);
+		List<User> list = new ArrayList<>();
+		try {
+			list = extractListUserFromResultSet(rs);
+			System.out.println(list.toString());
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	private List<User> extractListUserFromResultSet(ResultSet rs) throws SQLException {
+		List<User> list = new ArrayList<>();
+		
+		int id;
+		
+		String state;
+		String username; 
+		String password; 
+		String firstname; 
+		String lastname; 
+		String adres=""; //rs.getString("adres"); moet nog ingevoerd in database
+		String email;
+		int tel;
+		User user;
+		
+		try {
+			while (rs.next()) {
+				id = rs.getInt("id");
+				state = rs.getString("state");
+				username = rs.getString("username");
+				password = rs.getString("password");
+				firstname = rs.getString("firstname");
+				lastname = rs.getString("lastname");
+				adres = ""; // rs.getString("adres");
+				email = rs.getString("email");
+				tel = rs.getInt("tel");
+				user = new Member(id ,state, username, password, firstname, lastname, adres, email, tel);
+				list.add(user);
+			}
+			return list;
+		} catch (SQLException ex) {
+			return null;
+		}
+
+	}
+
+	private User extractUserFromResultSet(ResultSet rs) throws SQLException {
+
+		int id;
+		String state;
+		String role;
+		String username;
+		String password;
+		String firstname;
+		String lastname;
+		String adres = ""; // rs.getString("adres"); moet nog ingevoerd in database
+		String email;
+		int tel;
+		User user = null;
+		try {
+			if (rs.next()) {
+
+				id = rs.getInt("id");
+				state = rs.getString("state");
+				role = rs.getString("role");
+				username = rs.getString("username");
+				password = rs.getString("password");
+				firstname = rs.getString("firstname");
+				lastname = rs.getString("lastname");
+				adres = ""; // rs.getString("adres");
+				email = rs.getString("email");
+				tel = rs.getInt("tel");
+				switch (role) {
+				case "member":
+					new Member(id, state, username, password, firstname, lastname, adres, email, tel);
+					break;
+				case "librarian":
+					user = new Librarian(id, state, username, password, firstname, lastname, adres, email, tel);
+					break;
+				}			
+			}
+			return user;
+		} catch (SQLException ex) {
+			return null;
+		}
+	}
+	
+	@Override
+	public User get(String firstname, String lastname) {
+		
+		String query = "SELECT * FROM user WHERE firstname ='"+ firstname +"')";
+		query+=", lastname ='"+lastname+"')";
+				
+		ResultSet rs = connectSql.selectQuery(query);
+		User user = null;
+		try {
+			user = extractUserFromResultSet(rs);
+			System.out.println(user.toString());
+		} catch (SQLException e) {
+			System.out.println("user bestaat niet");
+			e.printStackTrace();
+		}				
+		return user;
+		}
+
+}

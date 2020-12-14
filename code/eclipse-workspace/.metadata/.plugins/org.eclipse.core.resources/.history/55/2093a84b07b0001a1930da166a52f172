@@ -1,0 +1,14 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.service.InterfaceDao;
+
+import java.util.ArrayList;
+
+
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+
+
+
+public interface AuthenticationDao {
+	User login(String username, String password) throws DaoException;
+	 User register(User user);
+}

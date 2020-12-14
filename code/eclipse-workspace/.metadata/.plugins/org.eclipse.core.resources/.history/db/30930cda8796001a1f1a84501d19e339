@@ -1,0 +1,16 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Loan;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.exception.LoanException;
+
+public interface LoanService  {
+	
+	Loan loanCopyItemToMember(int idCopy, int idMember) throws LoanException;
+	Loan renewLoanCopyItem(int copyId);
+	Boolean returnCopyItem (int idCopyItem);
+	Boolean memberIsAllowedToLoan(int idMember,int idCopy);
+	float penalityAmount (Loan loan);
+	
+}
+
+

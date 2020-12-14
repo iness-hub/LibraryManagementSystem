@@ -1,0 +1,150 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.view;
+
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+public class View  {
+
+	private JPanel contentPane;
+	private JFrame homeFrame;
+	private LoginPanel loginPanel;
+	private LibrarianPanel librarianPanel;
+	private ManageMembersPanel manageMembersPanel;
+	private ManageItemPanel manageItemPanel;
+	private ManageItemsPanel manageItemsPanel;
+//	private AddItemPanel addItemPanel;
+	private DeleteItemPanel deleteItemPanel;
+	private UpdateItemPanel updateItemPanel;
+	private SearchItemPanel searchItemPanel;
+	private ManageLoanPanel manageLoanPanel;
+	private AddLoanPanel addLoanPanel;
+	private RenewLoanPanel renewLoanPanel;
+	private ReturnCopyItemPanel returnCopyItemPanel;
+	private ReportPanel reportPanel;
+	
+	CardLayout cl = new CardLayout();
+	public enum PanelEnum  {login,librarian,member,manageLoan,manageMember,manageItem, addMember,updateMember,deleteMember,addItem,deleteItem,searchItem,updateItem,addLoan,renewLoan,returnCopy,ManageReport};
+	
+
+	/**
+	 * Create the frame.
+	 */
+	public View() {
+		
+		this.homeFrame = new JFrame();
+		homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		homeFrame.setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(cl);
+		homeFrame.setContentPane(contentPane);
+		
+	
+		this.loginPanel = new LoginPanel();
+		this.librarianPanel = new LibrarianPanel();
+		this. manageMembersPanel= new ManageMembersPanel();
+		
+		this.manageLoanPanel= new ManageLoanPanel();
+		this.reportPanel = new ReportPanel();
+		
+		this.manageItemsPanel = new ManageItemsPanel();
+	//	this.addItemPanel= new AddItemPanel();
+	//	this.deleteItemPanel = new DeleteItemPanel();
+	//	this.searchItemPanel= new SearchItemPanel();
+	//	this.updateItemPanel= new UpdateItemPanel();
+		
+		this.addLoanPanel = new AddLoanPanel();
+		this.renewLoanPanel = new RenewLoanPanel();
+		this.returnCopyItemPanel = new ReturnCopyItemPanel();
+		contentPane.add(loginPanel, PanelEnum.login.toString());
+		
+		contentPane.add(librarianPanel, PanelEnum.librarian.toString());
+		
+	
+		contentPane.add(manageMembersPanel, PanelEnum.manageMember.toString());
+	
+		contentPane.add(manageItemsPanel, PanelEnum.manageItem.toString());
+	//	contentPane.add(addItemPanel, PanelEnum.addItem.toString());
+	//	contentPane.add(deleteItemPanel, PanelEnum.deleteItem.toString());
+	//	contentPane.add(searchItemPanel, PanelEnum.searchItem.toString());
+	//	contentPane.add(updateItemPanel, PanelEnum.updateItem.toString());
+		
+		
+		contentPane.add(manageLoanPanel, PanelEnum.manageLoan.toString());
+		contentPane.add(addLoanPanel, PanelEnum.addLoan.toString());
+		contentPane.add(renewLoanPanel, PanelEnum.renewLoan.toString());
+		contentPane.add(returnCopyItemPanel, PanelEnum.returnCopy.toString());
+		
+		contentPane.add(reportPanel, PanelEnum.ManageReport.toString());
+		homeFrame.setVisible(true);
+		switchToPanel(PanelEnum.login);
+		
+		
+	}
+public void messageAlertBox (String message) {
+	JOptionPane.showMessageDialog(null, message);
+	
+	
+}
+	public void switchToPanel(PanelEnum panelEnum){
+		cl.show(contentPane,panelEnum.toString());
+	}
+	
+	public JPanel getContentPane() {
+		return contentPane;
+	}
+
+	public JFrame getHomeFrame() {
+		return homeFrame;
+	}
+
+	public LoginPanel getLoginPanel() {
+		return loginPanel;
+	}
+
+	public LibrarianPanel getLibrarianPanel() {
+		return librarianPanel;
+	}
+
+	public ManageMembersPanel getManageMembersPanel() {
+		return manageMembersPanel;
+	}
+	public ManageLoanPanel getManageLoanPanel() {
+		return manageLoanPanel;
+	}
+
+	public ReturnCopyItemPanel getReturnCopyItemPanel() {
+		return returnCopyItemPanel;
+	}
+
+	
+	
+	public ReportPanel getReportPanel() {
+		return reportPanel;
+	}
+
+	public CardLayout getCl() {
+		return cl;
+	}
+
+	public ManageItemsPanel getManageItemsPanel() {
+		return manageItemsPanel;
+	}
+
+	
+
+	public AddLoanPanel getAddLoanPanel() {
+		return addLoanPanel;
+	}
+
+	public RenewLoanPanel getRenewLoanPanel() {
+		return renewLoanPanel;
+	}
+	
+}

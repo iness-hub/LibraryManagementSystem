@@ -1,0 +1,12 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service.exception;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.service.LoanException;
+
+public class TooManyLoanBooksException extends LoanException {
+
+	public TooManyLoanBooksException() {
+		super("too many loan books");
+		// TODO Auto-generated constructor stub
+	}
+
+}

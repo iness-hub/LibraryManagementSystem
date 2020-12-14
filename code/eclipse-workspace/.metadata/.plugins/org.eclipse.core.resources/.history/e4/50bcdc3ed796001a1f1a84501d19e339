@@ -1,0 +1,90 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service;
+
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.AuthenticationDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.CategoryDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.CopyItemDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.DaoClass;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ItemDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.LoanDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.RoleUserDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.UserDao;
+
+public class ServiceClass {
+	private UserService userService;
+	private ItemService itemService;
+	private LoanService loanService;
+	private CopyItemService copyItemService;
+	private AuthenticationService authenticationService;
+	private CategoryService categoryService;
+	private RoleUserService roleUserService;
+	private ItemDao itemDao;
+	private CopyItemDao copyItemDao;
+	private UserDao userDao;
+	private RoleUserDao roleUserDao;
+	private LoanDao loanDao;	
+	private AuthenticationDao authenticationDao;
+	private CategoryDao categoryDao;
+	private DaoClass daoClass;
+	
+/*	public ServiceClass(ItemDao itemDao, UserDao userDao,AuthenticationDao authenticationDao) {
+		super();
+		this.itemDao = itemDao;
+		this.userDao = userDao;
+		this.loanDao = loanDao;
+		this.authenticationDao = authenticationDao;
+		this.userService = new UserServiceImpl(userDao);
+		this.itemService = new ItemServiceImpl(itemDao);;
+		this.authenticationService = new AuthenticationServiceImpl(authenticationDao);
+	//	this.loanService = new LoanServiceImpl(loanServiceDao);
+	}
+*/
+	public ServiceClass(DaoClass daoClass) {
+		super();
+		this.itemDao = daoClass.getItemDao();
+		this.copyItemDao = daoClass.getCopyItemDao();
+		this.userDao = daoClass.getUserDao();
+		this.loanDao = daoClass.getLoanDao();
+		this.authenticationDao = daoClass.getAuthenticationDao();
+		this.categoryDao=daoClass.getCategoryDao();
+		
+		this.userService = new UserServiceImpl(userDao);
+		this.itemService = new ItemServiceImpl(itemDao);;
+		this.authenticationService = new AuthenticationServiceImpl(authenticationDao);
+		this.loanService = new LoanServiceImpl(loanDao,userDao,itemDao,copyItemDao);
+		this.categoryService = new CategoryServiceImpl (categoryDao);
+		this.roleUserService = new RoleUserServiceImpl ();
+	}
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public ItemService getItemService() {
+		return itemService;
+	}
+
+	public AuthenticationService getAuthenticationService() {
+		return authenticationService;
+	}
+
+	public ItemDao getItemDao() {
+		return itemDao;
+	}
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public LoanDao getLoanDao() {
+		return loanDao;
+	}
+
+	public AuthenticationDao getAuthenticationDao() {
+		return authenticationDao;
+	}
+	public LoanService getLoanService() {
+		return loanService;
+	}
+	public CategoryService getCategoryService() {
+		return categoryService;
+	}
+}

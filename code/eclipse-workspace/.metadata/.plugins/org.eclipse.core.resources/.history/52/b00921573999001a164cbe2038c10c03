@@ -1,0 +1,214 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.view;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
+
+public class AddItemPanel extends JPanel {
+
+//	private JPanel NewAdherent;
+	private JTextField isbnTextField;
+	private JTextField titelTextField;
+	private JTextField authorTextField;
+	private JTextField summaryTextField;
+	private JButton btnConfirm;
+	private JComboBox typeComboBox;
+	private JComboBox categoryComboBox ;
+	private JButton AddCategoryButton;
+	private JTable table;
+	private JTextField textField;
+	private JLabel lblNewLabel_1;
+	private JTextField textField_1;
+	private JLabel lblNewLabel_7;
+	private JButton btnAddItem;
+	private JButton btnUpdateItem;
+	private JButton btnDeleteItem;
+	private JButton btnAddType;
+	private JTextField textIdItem;
+	private JLabel lblNewLabel_8;
+	
+	/**
+	 * Create the panel
+	 */
+	public AddItemPanel() {
+		setBounds(100, 100, 768, 452);
+		this.setBorder(new EmptyBorder(5, 5, 5, 5));
+		this.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("ISBN");
+		lblNewLabel.setBounds(28, 89, 134, 14);
+		this.add(lblNewLabel);
+		
+		JLabel lblNewLabel_2 = new JLabel("Titel");
+		lblNewLabel_2.setBounds(28, 120, 134, 14);
+		this.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Author");
+		lblNewLabel_3.setBounds(28, 145, 134, 14);
+		this.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Category");
+		lblNewLabel_4.setBounds(28, 220, 134, 14);
+		this.add(lblNewLabel_4);
+		
+		isbnTextField = new JTextField();
+		isbnTextField.setBounds(154, 86, 281, 20);
+		this.add(isbnTextField);
+		isbnTextField.setColumns(10);
+		
+		JLabel lblNewLabel_5 = new JLabel("Summary");
+		lblNewLabel_5.setBounds(28, 195, 134, 14);
+		this.add(lblNewLabel_5);
+		
+		JLabel lblNewLabel_6 = new JLabel("Type");
+		lblNewLabel_6.setBounds(28, 170, 134, 14);
+		this.add(lblNewLabel_6);
+		
+		titelTextField = new JTextField();
+		titelTextField.setBounds(154, 117, 281, 20);
+		this.add(titelTextField);
+		titelTextField.setColumns(10);
+		
+		authorTextField = new JTextField();
+		authorTextField.setBounds(154, 142, 281, 20);
+		this.add(authorTextField);
+		authorTextField.setColumns(10);
+		
+		summaryTextField = new JTextField();
+		summaryTextField.setBounds(154, 192, 281, 20);
+		this.add(summaryTextField);
+		summaryTextField.setColumns(10);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnBack.setBounds(135, 351, 89, 23);
+		this.add(btnBack);
+		
+		btnConfirm = new JButton("Confirm");
+		btnConfirm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnConfirm.setBounds(493, 351, 89, 23);
+		this.add(btnConfirm);
+		
+		typeComboBox = new JComboBox();
+		typeComboBox.setBounds(154, 166, 281, 22);
+		add(typeComboBox);
+		
+		categoryComboBox = new JComboBox();
+		
+		categoryComboBox.setBounds(154, 216, 281, 22);
+		add(categoryComboBox);
+		
+		AddCategoryButton = new JButton("Add category");
+		AddCategoryButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		AddCategoryButton.setBounds(599, 188, 124, 28);
+		add(AddCategoryButton);
+		
+		JSeparator separator = new JSeparator();
+		separator.setBounds(367, 11, 1, 346);
+		add(separator);
+		
+		table = new JTable();
+		table.setBounds(440, 89, 1, 1);
+		add(table);
+		
+		textField = new JTextField();
+		textField.setBounds(154, 245, 281, 20);
+		add(textField);
+		textField.setColumns(10);
+		
+		lblNewLabel_1 = new JLabel("Barcode");
+		lblNewLabel_1.setBounds(28, 244, 102, 14);
+		add(lblNewLabel_1);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(154, 272, 281, 20);
+		add(textField_1);
+		textField_1.setColumns(10);
+		
+		lblNewLabel_7 = new JLabel("State");
+		lblNewLabel_7.setBounds(28, 275, 46, 14);
+		add(lblNewLabel_7);
+		
+		btnAddItem = new JButton("Add item");
+		btnAddItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnAddItem.setBounds(599, 111, 124, 28);
+		add(btnAddItem);
+		
+		btnUpdateItem = new JButton("Update item");
+		btnUpdateItem.setBounds(599, 138, 124, 28);
+		add(btnUpdateItem);
+		
+		btnDeleteItem = new JButton("Delete Item");
+		btnDeleteItem.setBounds(599, 163, 124, 28);
+		add(btnDeleteItem);
+		
+		btnAddType = new JButton("Add type");
+		btnAddType.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnAddType.setBounds(599, 213, 124, 28);
+		add(btnAddType);
+		
+		textIdItem = new JTextField();
+		textIdItem.setBounds(151, 58, 281, 20);
+		add(textIdItem);
+		textIdItem.setColumns(10);
+		
+		lblNewLabel_8 = new JLabel("Id");
+		lblNewLabel_8.setBounds(28, 61, 46, 14);
+		add(lblNewLabel_8);
+	}
+	public void addItemConfirmListener(ActionListener actionListener) {
+        btnConfirm.addActionListener(actionListener);
+    }
+	
+	public JComboBox getTypeCombo() {
+		return typeComboBox;
+	}
+	public void addcomboBoxListener(ActionListener actionListener) {
+		typeComboBox.addActionListener(actionListener);
+    }
+	
+	public JTextField getIsbnTextField() {
+		return isbnTextField;
+	}
+	
+	public JTextField getTitelTextField() {
+		return titelTextField;
+	}
+	public JTextField getAuthorTextField() {
+		return authorTextField;
+	}
+	
+	public JComboBox getTypeComboBox() {
+		return typeComboBox;
+	}
+	public JTextField getSummaryTextField() {
+		// TODO Auto-generated method stub
+		return summaryTextField;
+	}
+}

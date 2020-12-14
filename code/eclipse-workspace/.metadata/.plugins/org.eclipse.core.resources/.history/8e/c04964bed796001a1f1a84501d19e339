@@ -1,0 +1,54 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.controller;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.service.AuthenticationService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.CategoryService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ItemService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.LoanService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ServiceClass;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.UserService;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View;
+
+public class Controller {
+	private View view;
+	/*private UserService userService;
+	private ItemService itemService;
+	private AuthenticationService authenticationService;*/
+	private  ServiceClass serviceClass;
+
+	private LoginController loginController; 
+	private LibrarianController librarianController; 
+	private ManageMemberController manageMemberController;	
+	private ManageItemController manageItemController;
+	private ManageLoanController manageLoanController;
+	private ManageReportController manageReportController;
+	private LoanService loanService;
+	private CategoryService categoryService;
+	private RoleUserService roleUserService;
+	
+/*public Controller (View view,UserService userService,ItemService itemService,AuthenticationService authenticationService) {
+	this.view = view;
+	this.userService=userService;
+	this.itemService=itemService;
+	this.authenticationService =authenticationService;
+	this.loginController = new LoginController(view,authenticationService);
+	this.librarianController = new LibrarianController(view,userService);
+	this.manageMemberController= new ManageMemberController(view,userService);	
+	this.manageItemController= new ManageItemController(view,itemService);
+	this.manageLoanController= new ManageLoanController(view,loanService);
+	this.manageReportController= new ManageReportController(view);
+}*/
+	
+	public Controller (View view,ServiceClass serviceClass)//UserService userService,ItemService itemService,AuthenticationService authenticationService) 
+	{
+		this.view = view;
+		this.serviceClass=serviceClass;
+		this.loginController = new LoginController(view,serviceClass.getAuthenticationService());
+		this.librarianController = new LibrarianController(view,serviceClass.getUserService());
+		this.manageMemberController= new ManageMemberController(view,serviceClass.getUserService());	
+		this.manageItemController= new ManageItemController(view,serviceClass.getItemService(),serviceClass.getCategoryService());
+		this.manageLoanController= new ManageLoanController(view,serviceClass.getLoanService(),serviceClass.getUserService(),serviceClass.getItemService());
+		this.manageReportController= new ManageReportController(view);
+		
+		
+	}
+}

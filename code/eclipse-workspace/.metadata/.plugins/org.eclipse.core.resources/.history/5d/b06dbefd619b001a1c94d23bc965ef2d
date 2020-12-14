@@ -1,0 +1,18 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.model;
+
+import java.util.Date;
+
+public class Staff extends User {
+
+	public Staff(int id, int roleId, int stateId, String username, String password, String firstname, String lastname,
+			String adres, String email, int tel) {
+		super(id, roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+
+	}
+
+	public Staff() {
+		super();
+
+	}
+
+}

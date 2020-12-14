@@ -1,0 +1,9 @@
+1588686620964	Delete element
+1588971383747	Rename method 'SetUpdatePanelFromUser'
+1588971396987	Rename method 'GetIdUserFromUpdatePanel'
+1589149023193	Rename field 'textISBN'
+1589149068299	Rename field 'textBarcode'
+1589149128060	Rename field 'textTitel'
+1589149151699	Rename field 'textAuthor'
+1589149184793	Rename field 'textType'
+1589149201055	Rename field 'textCategory'

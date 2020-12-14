@@ -1,0 +1,555 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Date;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.controller.ManageMemberController.AddMemberListener;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Book;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Category;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CategoryItem;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CopyItem;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Dvd;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Item;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.RoleUser;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.TypeItem;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.UserState;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.CategoryService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.CopyItemService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ItemService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.exception.ItemException;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.exception.LoanException;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.ManageCopyItemPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.ManageItemsPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.ManageMembersPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View.PanelEnum;
+
+
+
+public class ManageItemController {
+
+	private ItemService itemService;
+	private CategoryService categoryService;
+	private CopyItemService copyItemService;
+	private View view;
+	private ManageItemsPanel manageItemsPanel;
+	private ManageCopyItemPanel manageCopyItemPanel;
+
+	public ManageItemController(View view, ItemService itemService, CategoryService categoryService,
+			CopyItemService copyItemService) {
+		super();
+		this.view = view;
+		this.itemService = itemService;
+		this.categoryService = categoryService;
+		this.copyItemService = copyItemService;
+		this.manageItemsPanel = view.getManageItemsPanel();
+		this.manageCopyItemPanel = view.getManageCopyItemPanel();
+		this.manageItemsPanel.addItemListener(new AddItemListener());
+		this.manageItemsPanel.addBackListener(new AddBackListener());
+		fillComboType(this.manageItemsPanel);
+		fillComboCategory(this.manageItemsPanel);
+		fillComboSearch(this.manageItemsPanel);
+		this.manageItemsPanel.addSearchItemListener(new AddSearchItemListener());
+		this.manageItemsPanel.addSelectedRowMouseListener(new AddSelectedRowMouseListener());
+		this.manageItemsPanel.addNewItemListener(new AddNewItemListener());
+		this.manageItemsPanel.addUpdateItemListener(new AddUpdateItemListener());
+		this.manageItemsPanel.addDeleteItemListener(new AddDeleteItemListener());
+		this.manageItemsPanel.addManageCopyListener(new AddManageCopyListener());
+
+		this.manageCopyItemPanel.addBackListener(new AddBackCopyListener());
+		this.manageCopyItemPanel.addNewCopyListener(new AddNewCopyListener());
+		this.manageCopyItemPanel.addUpdateListener(new AddUpdateListener());
+		this.manageCopyItemPanel.addDeleteCopyListener(new AddDeleteCopyListener());
+		this.manageCopyItemPanel.addCopyListener(new AddCopyListener());
+		this.manageCopyItemPanel.addSelectedCopyRowMouseListener(new AddSelectedCopyRowMouseListener());
+
+	}
+
+	class AddNewItemListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			InitializeManageItemTextField();
+			manageItemsPanel.getBtnUpdateItem().setEnabled(false);
+			manageItemsPanel.getBtnDeleteItem().setEnabled(false);
+			manageItemsPanel.getBtnAddItem().setEnabled(true);
+		}
+	}
+
+	class AddUpdateItemListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			Item item = getItemFromManageItemsPanel(manageItemsPanel);
+			itemService.update(item);
+			JOptionPane.showMessageDialog(null, " item with number Id" + item.getId() + " is successfully updated");
+			InitializeManageItemTextField();
+			setUpTableDataItems(item);
+		}
+	}
+
+	class AddDeleteItemListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			Item item = getItemFromManageItemsPanel(manageItemsPanel);
+			try {
+				itemService.removeItem(item);
+				JOptionPane.showMessageDialog(null, " item with number Id" + item.getId() + " is successfully deleted");
+			} catch (ItemException e1) {
+				// messageBox met error vermelding
+				view.messageAlertBox(e1.getMessage());
+			}
+			InitializeManageItemTextField();
+			setUpTableDataItems(item);
+		}
+	}
+
+
+	class AddItemListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+
+			Item item = getItemFromManageItemsPanel(manageItemsPanel);
+			try {
+				item = itemService.addItem(item);
+			} catch (ItemException e1) {
+				view.messageAlertBox(e1.getMessage());
+			}
+			System.out.println("add item contrl button" + item.getIsbn());
+			if (item != null) {
+				intializeTableDataItems();
+				InitializeManageItemTextField();
+				setUpTableDataItems(item);
+				JOptionPane.showMessageDialog(null, " item with number Id" + item.getId() + " is added");
+			}
+
+		}
+
+	}
+
+	class AddManageCopyListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+
+			view.switchToPanel(PanelEnum.manageCopy);
+			intializeTableDataItems();
+			intializeTableDataCopyItems();
+			InitializeManageCopyItemTextField();
+			setManageCopyItemPanelFromItemPanel();
+			
+			Item item = getItemFromManageItemsPanel(manageItemsPanel);
+			setUpTableDataListCopyItems();
+			List<CopyItem> copies = copyItemService.getAllCopyItemsOfItem(item.getId());
+			item.setCopies(copies);
+			for (int i = 0; i < copies.size(); i++) {
+				setUpTableDataCopyItem(copies.get(i));
+			}
+		
+		}
+	}
+
+	class AddSelectedRowMouseListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			setManageItemsPanelFromSelectedRowFromJTableItems();
+			manageItemsPanel.getBtnUpdateItem().setEnabled(true);
+			manageItemsPanel.getBtnDeleteItem().setEnabled(true);
+			manageItemsPanel.getBtnAddItem().setEnabled(false);
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	class AddSelectedCopyRowMouseListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			setManageCopyItemPanelFromTableCopies();
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	class AddSearchItemListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String searchBy = manageItemsPanel.getComboBoxSearch().getSelectedItem().toString();
+			intializeTableDataItems();
+			List<Item> items;
+			switch (searchBy) {
+			case ("All"):
+				items = itemService.getAll();
+				for (int i = 0; i < items.size(); i++)
+					setUpTableDataItems(items.get(i));
+				break;
+
+			case ("by Id"):
+				int id;
+				if (manageItemsPanel.getTextSearch().getText().isEmpty())
+					id = 0;
+				else
+					id = Integer.parseInt(manageItemsPanel.getTextSearch().getText());
+				try {
+					Item item = itemService.getItemById(id);
+					if (item != null)
+						setUpTableDataItems(item);
+				} catch (ItemException e1) {
+					// messageBox met error vermelding
+					view.messageAlertBox(e1.getMessage());
+				}
+				break;
+
+			case ("by category"):
+				String categoryEntered;
+				categoryEntered = manageItemsPanel.getTextSearch().getText().toString();
+				if (categoryEntered.isEmpty())
+					categoryEntered = null;
+				else {
+					if (checkCategory(categoryEntered)) {
+						CategoryItem categoryName = CategoryItem.valueOf(categoryEntered);
+						int categoryId = categoryService.get(categoryName).getId();
+
+						try {
+							items = itemService.getItemByCategory(categoryId);
+							for (int i = 0; i < items.size(); i++)
+								setUpTableDataItems(items.get(i));
+						} catch (ItemException e1) {
+							// messageBox met error vermelding
+							view.messageAlertBox(e1.getMessage());
+						}
+					} else {
+						System.out.println("category inconnu");
+					}
+				}
+				break;
+
+			case ("by title"):
+				break;
+			case ("by Identification Nb"):
+				break;
+			case ("by author"):
+				break;
+
+			}
+		}
+	}
+
+	class AddBackListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			view.switchToPanel(PanelEnum.librarian);
+		}
+	}
+
+	
+
+	public void fillComboCategory(ManageItemsPanel manageItemsPanel) {
+		List<Category> list = categoryService.getAll();
+		for (int i = 0; i < list.size(); i++)
+			manageItemsPanel.getCategoryCombo().addItem(list.get(i).getName().toString());
+
+	}
+
+	public void fillComboSearch(ManageItemsPanel manageItemsPanel) {
+		manageItemsPanel.getComboBoxSearch().addItem("All");
+		manageItemsPanel.getComboBoxSearch().addItem("by Id");
+		manageItemsPanel.getComboBoxSearch().addItem("by category");
+		manageItemsPanel.getComboBoxSearch().addItem("by title");
+		manageItemsPanel.getComboBoxSearch().addItem("by identification Nb");
+		manageItemsPanel.getComboBoxSearch().addItem("by author");
+	}
+
+	public void fillComboType(ManageItemsPanel manageItemsPanel) {
+		for (TypeItem type : TypeItem.values()) {
+			manageItemsPanel.getTypeCombo().addItem(type.toString());
+		}
+	}
+
+	public Item getItemFromManageItemsPanel(ManageItemsPanel manageItemsPanel) {
+
+		Item item = null;
+		int id = 0;
+		int isbn = 0;
+		if (manageItemsPanel.getTextIdItem().getText().length() == 0)
+			id = 0;
+		else
+			id = Integer.parseInt(manageItemsPanel.getTextIdItem().getText());
+		int categoryId;
+		int typeId;
+		if (manageItemsPanel.getIsbnTextField().getText().length() != 0)
+			isbn = Integer.parseInt(manageItemsPanel.getIsbnTextField().getText());
+
+		String title = manageItemsPanel.getTitelTextField().getText();
+		String author = manageItemsPanel.getAuthorTextField().getText();
+		String summary = manageItemsPanel.getSummaryTextField().getText();
+		CategoryItem categoryName = CategoryItem.valueOf(manageItemsPanel.getCategoryCombo().getSelectedItem().toString());
+		TypeItem typeItem = TypeItem.valueOf(manageItemsPanel.getTypeCombo().getSelectedItem().toString());
+		Category category = categoryService.get(categoryName);
+		categoryId = category.getId();
+		return ItemFactory.getItem(id, isbn, title, author, typeItem, summary, category, null);
+
+	}
+
+	public CopyItem getCopyItemFromManageCopyItemPanel(ManageCopyItemPanel manageCopyItemPanel) {
+		CopyItem copyItem = null;
+		Item item;
+		int id = 0;
+
+		if (manageCopyItemPanel.getTextIdCopy().getText().length() == 0)
+			id = 0;
+		else
+			id = Integer.parseInt(manageCopyItemPanel.getTextIdCopy().getText());
+		String state = manageCopyItemPanel.getTextState().getText();
+		int barcode = Integer.parseInt(manageCopyItemPanel.getTextBarcode().getText());
+		item = getItemFromManageItemsPanel(manageItemsPanel);
+		return copyItem = new CopyItem(id, barcode, state, item);
+
+	}
+
+	public void setUpTableDataItems(Item item) {
+		if (item != null) {
+			JTable jTable = manageItemsPanel.getTableItems();
+			DefaultTableModel tableModel = (DefaultTableModel) jTable.getModel();
+			String typeItem = null;
+			typeItem = item.getTypeItem().toString();
+			String[] data = new String[7];
+			data[0] = String.valueOf(item.getId());
+			data[1] = categoryService.get(item.getCategory().getId()).getName().toString();
+			data[2] = typeItem;
+			data[3] = item.getTitle();
+			data[4] = String.valueOf(item.getIsbn());
+			data[5] = item.getAuthor();
+			data[6] = item.getSummary();
+
+			// "Id", "Category", "Type", "Title", "identificatieNb", "Author", "Summary"
+			tableModel.addRow(data);
+			manageItemsPanel.getTableItems().setModel(tableModel);
+		}
+	}
+
+	public void intializeTableDataItems() {
+		JTable jTable = manageItemsPanel.getTableItems();
+		DefaultTableModel tableModel = (DefaultTableModel) jTable.getModel();
+		tableModel.setRowCount(0);
+	}
+
+	public void intializeTableDataCopyItems() {
+		JTable jTable = manageCopyItemPanel.getTable();
+		DefaultTableModel tableModel = (DefaultTableModel) jTable.getModel();
+		tableModel.setRowCount(0);
+	}
+
+	public void setManageItemsPanelFromSelectedRowFromJTableItems() {
+		JTable jTable = manageItemsPanel.getTableItems();
+		int selectedRow = jTable.getSelectedRow();
+
+		int id = Integer.parseInt((String) (jTable.getModel().getValueAt(selectedRow, 0)));
+		
+		String categoryName = (String) (jTable.getModel().getValueAt(selectedRow, 1));
+		TypeItem typeItem = TypeItem.valueOf((String) (jTable.getModel().getValueAt(selectedRow, 2)));
+		String title = (String) (jTable.getModel().getValueAt(selectedRow, 3));
+		int isbn = Integer.parseInt((String) (jTable.getModel().getValueAt(selectedRow, 4)));
+		String author = (String) (jTable.getModel().getValueAt(selectedRow, 5));
+		String summary = (String) (jTable.getModel().getValueAt(selectedRow, 6));
+
+		manageItemsPanel.getTextIdItem().setText(Integer.toString(id));
+		manageItemsPanel.getIsbnTextField().setText(Integer.toString(isbn));
+		manageItemsPanel.getTitelTextField().setText(title);
+		manageItemsPanel.getAuthorTextField().setText(author);
+		manageItemsPanel.getSummaryTextField().setText(summary);
+
+		manageItemsPanel.getCategoryCombo().setSelectedItem(categoryName.toString());
+		manageItemsPanel.getTypeCombo().setSelectedItem(typeItem.toString());
+
+	}
+
+	public void setManageCopyItemPanelFromItemPanel() {
+
+		manageCopyItemPanel.getTextIdItem().setText(manageItemsPanel.getTextIdItem().getText().toString());
+		manageCopyItemPanel.getTextIsbn().setText(manageItemsPanel.getIsbnTextField().getText().toString());
+		manageCopyItemPanel.getTextTitle().setText(manageItemsPanel.getTitelTextField().getText().toString());
+		manageCopyItemPanel.getTextAuthor().setText(manageItemsPanel.getAuthorTextField().getText().toString());
+		manageCopyItemPanel.getTextCategory().setText(manageItemsPanel.getCategoryCombo().getSelectedItem().toString());
+		manageCopyItemPanel.getTextType().setText(manageItemsPanel.getTypeCombo().getSelectedItem().toString());
+	}
+
+	public void InitializeManageItemTextField() {
+
+		manageItemsPanel.getTextIdItem().setText(null);
+		manageItemsPanel.getIsbnTextField().setText(null);
+		manageItemsPanel.getTitelTextField().setText(null);
+		manageItemsPanel.getAuthorTextField().setText(null);
+		manageItemsPanel.getSummaryTextField().setText(null);
+		manageItemsPanel.getCategoryCombo().setSelectedItem(null);
+		manageItemsPanel.getTypeCombo().setSelectedItem(null);
+	}
+
+	public void InitializeManageCopyItemTextField() {
+
+		manageCopyItemPanel.getTextIdCopy().setText(null);
+		manageCopyItemPanel.getTextBarcode().setText(null);
+		manageCopyItemPanel.getTextState().setText(null);
+	}
+
+	public void setUpTableDataCopyItem(CopyItem copyItem) {
+		JTable jTable = manageCopyItemPanel.getTable();
+		DefaultTableModel tableModel = (DefaultTableModel) jTable.getModel();
+
+		String[] data = new String[3];
+		data[0] = String.valueOf(copyItem.getId());
+		data[1] = String.valueOf(copyItem.getBarcode());
+		data[2] = copyItem.getState().toString();
+
+		// "Id", "Category", "Type", "Title", "identificatieNb", "Author", "Summary"
+		tableModel.addRow(data);
+		manageCopyItemPanel.getTable().setModel(tableModel);
+	}
+
+	public void setManageCopyItemPanelFromTableCopies() {
+		JTable jTable = manageCopyItemPanel.getTable();
+		int selectedRow = jTable.getSelectedRow();
+		manageCopyItemPanel.getTextIdCopy().setText((String) (jTable.getModel().getValueAt(selectedRow, 0)));
+		manageCopyItemPanel.getTextBarcode().setText((String) (jTable.getModel().getValueAt(selectedRow, 1)));
+		manageCopyItemPanel.getTextState().setText((String) (jTable.getModel().getValueAt(selectedRow, 2)));
+	}
+
+	class AddBackCopyListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			view.switchToPanel(PanelEnum.manageItem);
+			intializeTableDataItems();
+		}
+	}
+
+	class AddNewCopyListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			InitializeManageCopyItemTextField();
+			manageCopyItemPanel.getBtnAddCopy().setEnabled(true);	
+		}
+	}
+
+	class AddCopyListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			CopyItem copyItem = getCopyItemFromManageCopyItemPanel(manageCopyItemPanel);
+			try {
+				CopyItem copy =copyItemService.addCopyItem(copyItem);
+					intializeTableDataCopyItems();
+					setUpTableDataListCopyItems();
+				//	setUpTableDataCopyItem(copy);
+					JOptionPane.showMessageDialog(null, " copy with number Id" + copyItem.getId() + " is added");
+					manageCopyItemPanel.getBtnAddCopy().setEnabled(false);	
+					
+			} catch (ItemException e1) {
+				view.messageAlertBox(e1.getMessage());
+			}
+		}
+	}
+
+	class AddDeleteCopyListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			CopyItem copyItem = getCopyItemFromManageCopyItemPanel(manageCopyItemPanel);
+		//	copyItem =copyItemService.delete(copyItem);
+			intializeTableDataCopyItems();
+			setUpTableDataListCopyItems();
+		//	setUpTableDataCopyItem(copy);
+			JOptionPane.showMessageDialog(null, " copy with number Id" + copyItem.getId() + " is deleted");
+			manageCopyItemPanel.getBtnAddCopy().setEnabled(false);	
+			
+		}
+
+	}
+
+	class AddUpdateListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			CopyItem copyItem = getCopyItemFromManageCopyItemPanel(manageCopyItemPanel);
+			copyItem =copyItemService.update(copyItem);
+			
+			setUpTableDataListCopyItems();
+		//	setUpTableDataCopyItem(copy);
+			JOptionPane.showMessageDialog(null, " copy with number Id" + copyItem.getId() + " is updated");
+			manageCopyItemPanel.getBtnAddCopy().setEnabled(false);	
+			
+		}
+	}
+
+	private Boolean checkCategory(String str) {
+		CategoryItem[] Categories = CategoryItem.values();
+		for (CategoryItem c : Categories) {
+			if (c.toString().equals(str)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void setUpTableDataListCopyItems()
+	{
+		Item item = getItemFromManageItemsPanel(manageItemsPanel);
+		intializeTableDataCopyItems();
+		List<CopyItem> copies = copyItemService.getAllCopyItemsOfItem(item.getId());
+		item.setCopies(copies);
+		for (int i = 0; i < copies.size(); i++) {
+			setUpTableDataCopyItem(copies.get(i));
+		}
+	}
+
+}

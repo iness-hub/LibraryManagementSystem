@@ -1,0 +1,43 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import java.util.List;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.RoleUser;
+
+public class RoleUserDaoDB implements RoleDao {
+	private ConnectSql connectSql;
+	
+	public RoleDaoDB(ConnectSql connectSql) {
+		this.connectSql = connectSql;
+	}
+	@Override
+	public RoleUser insert(RoleUser obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RoleUser update(RoleUser obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean delete(RoleUser obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public RoleUser get(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<RoleUser> getAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

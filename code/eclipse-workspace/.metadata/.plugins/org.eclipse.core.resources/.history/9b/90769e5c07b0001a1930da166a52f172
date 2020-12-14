@@ -1,0 +1,82 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.service.InterfaceDao;
+
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.AuthenticationDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.AuthenticationDaoDB;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.CategoryDaoDB;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ConnectSql;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.CopyItemDaoDB;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ItemDaoDB;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.LoanDaoDB;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ReservationDaoDB;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.UserDaoDB;
+
+public class DaoClass {
+
+	private ConnectDB connectDB;
+	private ItemDao itemDao;
+	private AuthenticationDao authenticationDao;
+	private LoanDao loanDao;
+	private UserDao userDao;
+	private CopyItemDao copyItemDao;
+	private CategoryDao categoryDao;
+	private RoleUserDao roleUserDao;
+	private StateUserDao stateUserDao;
+	private ReservationDao reservationDao;
+	
+	public DaoClass(ConnectDB connectDb) {
+		this.connectDB= new ConnectSql();
+		this.userDao = new UserDaoDB(connectDB);
+		this.itemDao = new ItemDaoDB(connectDB);
+		this.copyItemDao = new CopyItemDaoDB(connectDB);
+		this.authenticationDao = new AuthenticationDaoDB(connectDB);
+		this.loanDao = new LoanDaoDB(connectDB);
+		this.categoryDao = new CategoryDaoDB(connectDB);
+	//	this.roleUserDao = new RoleUserDaoDB(connectDB);
+	//	this.stateUserDao = new StateUserDaoDB(connectDB);
+		this.reservationDao= new ReservationDaoDB(connectDB);
+	
+	}
+	public ConnectDB getConnectDB() {
+		return connectDB;
+	}
+	public UserDao getUserDao() {
+		return userDao;
+	}
+	public ItemDao getItemDao() {
+		return itemDao;
+	}
+	public CopyItemDao getCopyItemDao() {
+		return copyItemDao;
+	}
+	public ReservationDao getReservationDao() {
+		return reservationDao;
+	}
+	public void setReservationDao(ReservationDao reservationDao) {
+		this.reservationDao = reservationDao;
+	}
+	public AuthenticationDao getAuthenticationDao() {
+		return authenticationDao;
+	}
+	public LoanDao getLoanDao() {
+		return loanDao;
+	}
+	public CategoryDao getCategoryDao() {
+		return categoryDao;
+	}
+	public RoleUserDao getRoleUserDao() {
+		return roleUserDao;
+	}
+	public void setRoleUserDao(RoleUserDao roleUserDao) {
+		this.roleUserDao = roleUserDao;
+	}
+	public StateUserDao getStateUserDao() {
+		return stateUserDao;
+	}
+	public void setStateUserDao(StateUserDao stateUserDao) {
+		this.stateUserDao = stateUserDao;
+	}
+	
+	
+	
+}
+

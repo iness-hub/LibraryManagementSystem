@@ -1,0 +1,76 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.view;
+
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class MemberPanel extends JPanel {
+
+	/**
+	 * Create the panel.
+	 */
+	private JButton btnMyProfile;
+	private JButton btnConsultItems;
+	private JButton btnMyLoanedItems; 
+	private JButton btnEsc;
+	
+	public MemberPanel() {
+		setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Welkom Member");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblNewLabel.setBounds(55, 11, 195, 20);
+		add(lblNewLabel);
+		
+		btnMyProfile = new JButton("My profile");
+		btnMyProfile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnMyProfile.setBounds(133, 91, 154, 23);
+		add(btnMyProfile);
+		
+		 btnMyLoanedItems = new JButton("My Loaned items");
+		btnMyLoanedItems.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnMyLoanedItems.setBounds(133, 150, 154, 23);
+		add(btnMyLoanedItems);
+		
+		btnConsultItems = new JButton("Consult item");
+		btnConsultItems.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnConsultItems.setBounds(133, 204, 154, 23);
+		add(btnConsultItems);
+		
+		btnEsc = new JButton("Esc");
+		btnEsc.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnEsc.setBounds(55, 266, 89, 23);
+		add(btnEsc);
+
+	}
+
+	public void addMyProfileListener(ActionListener actionListener) {
+		btnMyProfile.addActionListener(actionListener);
+	}
+
+	public void addMyLoanedItemsListener(ActionListener actionListener) {
+		btnMyLoanedItems.addActionListener(actionListener);
+	}
+
+	public void addSearchItemsListener(ActionListener actionListener) {
+		btnConsultItems.addActionListener(actionListener);
+	}
+	public void addEscListener (ActionListener actionListener) {
+		btnEsc.addActionListener(actionListener);
+	}
+}

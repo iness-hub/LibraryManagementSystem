@@ -1,0 +1,7 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.service.InterfaceDao;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.RoleUser;
+
+public interface RoleUserDao extends CrudDao <RoleUser>{
+
+}

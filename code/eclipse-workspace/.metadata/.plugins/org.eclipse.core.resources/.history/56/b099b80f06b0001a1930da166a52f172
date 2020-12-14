@@ -1,0 +1,59 @@
+package test.service;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CopyItem;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CopyState;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Item;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.CopyItemService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.CopyItemServiceImpl;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.InterfaceDao.CopyItemDao;
+
+
+
+class CopyItemTestCase {
+
+	private CopyItemDao copyItemDao;
+	private CopyItemService copyItemService;
+	
+	@BeforeEach
+	void setUp() throws Exception {
+		copyItemDao= mock(CopyItemDao.class);
+		this.copyItemService= new CopyItemServiceImpl(copyItemDao);
+	}
+		@Test
+	void copyIsAvailableIsAllowedToLoanSuccessTest() {
+		//Arrange
+		Boolean expected= true;
+		int copyId =1;
+		Item item = new Item(1);
+		CopyItem availableCopy= new CopyItem(copyId,123456,CopyState.available.toString(),item);
+		// Mock
+		when(copyItemDao.get(copyId)).thenReturn(availableCopy);
+		//Act
+		Boolean actual =copyItemService.isCopyAvailable(copyId);
+		//Assert
+		Assertions.assertEquals(expected, actual);
+	}
+	
+	@Test
+	void copyIsReservedIsNotAllowedToLoanTest() {
+		//Arrange
+		Boolean expected= false;
+		int copyId =1;
+		Item item = null;
+		CopyItem availableCopy= new CopyItem(copyId,123456,CopyState.reserved.toString(),item);
+		// Mock
+		when (copyItemDao.get(copyId)).thenReturn(availableCopy);
+		//Act
+		Boolean actual =copyItemService.isCopyAvailable(copyId);
+		//Assert
+		Assertions.assertEquals(expected, actual);
+	}
+	
+}

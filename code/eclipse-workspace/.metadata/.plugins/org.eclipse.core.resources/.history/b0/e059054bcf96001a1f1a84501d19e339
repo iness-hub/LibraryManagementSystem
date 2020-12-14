@@ -1,0 +1,238 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.view;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+
+public class AddMemberPanel extends JPanel {
+	private JTextField textFirstname;
+	private JTextField textLastname;
+	private JTextField textBirthdate;
+	private JTextField textAdres;
+	private JTextField textDatein;
+	private JTextField textDateout;
+	private JTextField textState;
+	private JTextField textUsername;
+	private JTextField textPassword;
+	private JTextField textEmail;
+	private JTextField textTel;
+	private JButton btnAddMember;
+	private JTextField textRoleUser;
+	private JTextField textStateUser;
+
+	/**
+	 * Create the panel.
+	 */
+	public AddMemberPanel() {
+
+		this.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setLayout(null);
+
+		JLabel lblFirstname = new JLabel("First Name");
+		lblFirstname.setBounds(36, 82, 51, 14);
+		this.add(lblFirstname);
+
+		JLabel lblLastname = new JLabel("Last Name");
+		lblLastname.setBounds(36, 108, 50, 14);
+		this.add(lblLastname);
+
+		JLabel lblBirthDate = new JLabel("Birth date");
+		lblBirthDate.setBounds(36, 184, 47, 14);
+		this.add(lblBirthDate);
+
+		JLabel lblAdres = new JLabel("Adres");
+		lblAdres.setBounds(36, 209, 28, 14);
+		this.add(lblAdres);
+
+		JLabel lblDateIn = new JLabel("Date in");
+		lblDateIn.setBounds(283, 184, 34, 14);
+		this.add(lblDateIn);
+
+		JLabel lblState = new JLabel("State");
+		lblState.setBounds(283, 159, 26, 14);
+		this.add(lblState);
+
+		JLabel lblDateOut = new JLabel("Date Out");
+		lblDateOut.setBounds(283, 209, 44, 14);
+		this.add(lblDateOut);
+
+		textFirstname = new JTextField();
+		textFirstname.setBounds(141, 82, 86, 20);
+		this.add(textFirstname);
+		textFirstname.setColumns(10);
+
+		textLastname = new JTextField();
+		textLastname.setBounds(141, 105, 86, 20);
+		this.add(textLastname);
+		textLastname.setColumns(10);
+
+		textBirthdate = new JTextField();
+		textBirthdate.setBounds(141, 181, 86, 20);
+		this.add(textBirthdate);
+		textBirthdate.setColumns(10);
+
+		textAdres = new JTextField();
+		textAdres.setBounds(141, 206, 86, 20);
+		this.add(textAdres);
+		textAdres.setColumns(10);
+
+		textDatein = new JTextField();
+		textDatein.setBounds(359, 181, 86, 20);
+		this.add(textDatein);
+		textDatein.setColumns(10);
+
+		textDateout = new JTextField();
+		textDateout.setBounds(359, 206, 86, 20);
+		this.add(textDateout);
+		textDateout.setColumns(10);
+
+		textState = new JTextField();
+		textState.setBounds(359, 150, 86, 20);
+		this.add(textState);
+		textState.setColumns(10);
+
+		btnAddMember = new JButton("Add");
+		btnAddMember.setBounds(317, 257, 51, 23);
+		btnAddMember.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+		this.add(btnAddMember);
+
+		JLabel lblNewLabel = new JLabel("Username");
+		lblNewLabel.setBounds(36, 133, 48, 14);
+		this.add(lblNewLabel);
+
+		textUsername = new JTextField();
+		textUsername.setBounds(141, 130, 86, 20);
+		this.add(textUsername);
+		textUsername.setColumns(10);
+
+		JLabel lblNewLabel_1 = new JLabel("Password");
+		lblNewLabel_1.setBounds(36, 159, 46, 14);
+		this.add(lblNewLabel_1);
+
+		JButton btnEsc = new JButton("Esc");
+		btnEsc.setBounds(64, 257, 49, 23);
+		btnEsc.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		this.add(btnEsc);
+
+		textPassword = new JTextField();
+		textPassword.setBounds(141, 156, 86, 20);
+		this.add(textPassword);
+		textPassword.setColumns(10);
+
+		JLabel lblNewLabel_3 = new JLabel("Email");
+		lblNewLabel_3.setBounds(283, 130, 24, 14);
+		this.add(lblNewLabel_3);
+
+		JLabel lblNewLabel_4 = new JLabel("Tel");
+		lblNewLabel_4.setBounds(283, 88, 14, 14);
+		this.add(lblNewLabel_4);
+
+		textEmail = new JTextField();
+		textEmail.setBounds(359, 118, 86, 20);
+		this.add(textEmail);
+		textEmail.setColumns(10);
+
+		textTel = new JTextField();
+		textTel.setBounds(359, 93, 86, 20);
+		this.add(textTel);
+		textTel.setColumns(10);
+		
+		textRoleUser = new JTextField();
+		textRoleUser.setBounds(141, 26, 86, 20);
+		add(textRoleUser);
+		textRoleUser.setColumns(10);
+		
+		textStateUser = new JTextField();
+		textStateUser.setBounds(141, 57, 86, 20);
+		add(textStateUser);
+		textStateUser.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("Role");
+		lblNewLabel_2.setBounds(36, 29, 21, 14);
+		add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_5 = new JLabel("State");
+		lblNewLabel_5.setBounds(36, 60, 26, 14);
+		add(lblNewLabel_5);
+	}
+
+	public void addConfirmMemberListener(ActionListener actionListener) {
+		btnAddMember.addActionListener(actionListener);
+	}
+
+	public JTextField getTextFirstname() {
+		return textFirstname;
+	}
+
+	public JTextField getTextLastname() {
+		return textLastname;
+	}
+
+	public JTextField getTextBirthdate() {
+		return textBirthdate;
+	}
+
+	public JTextField getTextAdres() {
+		return textAdres;
+	}
+
+	public JTextField getTextRoleUser() {
+		return textRoleUser;
+	}
+
+	public void setTextRoleUser(JTextField textRoleUser) {
+		this.textRoleUser = textRoleUser;
+	}
+
+	public void setTextState(JTextField textState) {
+		this.textState = textState;
+	}
+
+	public JTextField getTextDatein() {
+		return textDatein;
+	}
+
+	public JTextField getTextDateout() {
+		return textDateout;
+	}
+
+	public JTextField getTextState() {
+		return textState;
+	}
+
+	public JTextField getTextUsername() {
+		return textUsername;
+	}
+
+	public JTextField getTextPassword() {
+		return textPassword;
+	}
+
+	public JTextField getTextEmail() {
+		return textEmail;
+	}
+
+	public JTextField getTextTel() {
+		return textTel;
+	}
+	
+}

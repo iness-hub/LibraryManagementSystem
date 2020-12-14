@@ -1,0 +1,10 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service.exception;
+
+public class CopyAlreadyReturnedException extends LoanException {
+
+	public CopyAlreadyReturnedException() {
+		super("Copy is al geretourneerd");
+		// TODO Auto-generated constructor stub
+	}
+
+}

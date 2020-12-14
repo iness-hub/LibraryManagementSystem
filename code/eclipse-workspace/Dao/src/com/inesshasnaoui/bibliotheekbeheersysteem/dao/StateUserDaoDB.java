@@ -1,0 +1,92 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.StateUser;
+
+
+public class StateUserDaoDB implements StateUserDao{
+private ConnectSql connectSql;
+	
+	public StateUserDaoDB(ConnectSql connectSql) {
+		this.connectSql = connectSql;
+	}
+
+	@Override
+	public StateUser insert(StateUser obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public StateUser update(StateUser obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean delete(StateUser obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public StateUser get(long id) {
+		return null;
+	}
+
+	private StateUser extractStateUserFromResultSet(ResultSet rs) throws SQLException {
+		
+			int id;
+			String name;
+			StateUser stateUser = null;
+					try {
+					if (rs.next()) {
+					id = rs.getInt("id");
+					name = rs.getString("name");
+					stateUser = new StateUser(name);
+				}
+				return stateUser;
+			} catch (SQLException ex) {
+				return null;
+			}
+		}
+		
+	
+	@Override
+	public List<StateUser> getAll() {
+		String query = "SELECT * FROM state ";
+		ResultSet rs = connectSql.selectQuery(query);
+		StateUser stateUser = null;
+		List<StateUser>list = new ArrayList<>();
+		try {
+			list = extractListStateUserFromResultSet(rs);
+		} catch (SQLException e) {
+			System.out.println("role user bestaat niet");
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+	
+	private List<StateUser> extractListStateUserFromResultSet(ResultSet rs) throws SQLException {
+		
+		String name;
+		List<StateUser>list = new ArrayList<>();
+				try {
+				while (rs.next()) {
+				name = rs.getString("name");
+				StateUser stateUser = new StateUser( name);
+				list.add(stateUser);
+				
+			}
+			return list;
+		} catch (SQLException ex) {
+			return null;
+		}
+	}
+	
+	
+}

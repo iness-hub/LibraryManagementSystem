@@ -1,0 +1,84 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Librarian;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.AuthenticationService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ServiceClass;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.UserService;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.LibrarianPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.LoginPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View.PanelEnum;
+import com.inesshasnaoui.bibliotheekbeheersysteem.Application;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ConnectSql;
+
+public class LoginController {
+
+	private LoginPanel loginPanel;
+	private View view;
+	private ServiceClass serviceClass;
+	private AuthenticationService authenticationService;
+
+	public LoginController(View view, AuthenticationService authenticationService,ServiceClass serviceClass) {
+		super();
+		this.view = view;
+		this.authenticationService = authenticationService;
+		this.serviceClass = serviceClass;
+		this.loginPanel = view.getLoginPanel();
+		this.loginPanel.addLoginListener(new LoginListener());
+
+	}
+
+	class LoginListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			String usernameLogin = loginPanel.getUsername().getText();
+			String passwordLogin = loginPanel.getPasswordField().getText().toString();
+			int userId;
+			// User user = authenticationService.login(usernameLogin, passwordLogin);
+			switch (authenticationService.login(usernameLogin, passwordLogin).getRoleId()) {
+			
+			case 1:
+				view.switchToPanel(PanelEnum.librarian);
+				userId = authenticationService.login(usernameLogin, passwordLogin).getId();
+				Application.localLibrarianInformation.generateLibrarianInfo(userId);
+				break;
+			case 2:
+				view.switchToPanel(PanelEnum.member);
+				userId = authenticationService.login(usernameLogin, passwordLogin).getId();
+				Application.localMemberInformation.generateMemberInfo(userId);
+				break;
+			}
+							
+		}
+	}
+
+	
+public User generatePersonelInfo(int userId) {
+		
+		User tempUser = serviceClass.getUserService().get(userId);
+		int id= tempUser.getId();
+		 int roleId = tempUser.getRoleId();
+		 int stateId=tempUser.getStateId();
+		 String username= tempUser.getUsername();
+		 String password = tempUser.getPassword();
+		 String firstname = tempUser.getPerson().getFirstname() ;
+		 String lastname = tempUser.getPerson().getLastname();
+		 String adres = tempUser.getPerson().getAdres();
+		 String email = tempUser.getPerson().getEmail();
+		 int tel = tempUser.getPerson().getTel();
+		switch (roleId) { 
+		case 1 : return new Member(id,roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+				break;
+		
+		case 2 : return new Librarian(id,roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+				break;
+			
+		}
+}
+}

@@ -1,0 +1,23 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.controller;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.service.UserService;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.MemberPanel;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ConnectSql;
+
+public class MemberController {
+	private MemberPanel memberPanel;
+	private ConnectSql connectSql;
+	private View view;
+	private UserService userService;
+	
+	public MemberController(View view, UserService userService) {
+		super();
+		this.view = view;
+		this.userService = userService;
+		this.memberPanel = view.getMemberPanel();
+	}
+
+	
+	
+}

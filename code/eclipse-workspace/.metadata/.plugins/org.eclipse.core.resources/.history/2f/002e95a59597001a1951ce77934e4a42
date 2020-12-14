@@ -1,0 +1,16 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.model;
+
+import java.util.ArrayList;
+
+public class StateUser {
+	private int id;
+	private String name;
+	private ArrayList<User> users;
+	
+	public StateUser(int id, String name, ArrayList<User> users) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.users = users;
+	}
+}

@@ -1,0 +1,12 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.service.InterfaceDao;
+
+import java.util.List;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Item;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.CrudDao;
+
+public interface ItemDao extends CrudDao<Item> {
+	Item getIsbn(int isbn);
+	List<Item> getItemByCategory(int categoryId);
+	Item makeItemInActive(Item item);
+}

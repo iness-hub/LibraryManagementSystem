@@ -1,0 +1,161 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.view;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+
+public class AddItemPanel extends JPanel {
+
+	private JPanel NewAdherent;
+	private JTextField isbnTextField;
+	private JTextField titelTextField;
+	private JTextField authorTextField;
+	private JTextField typeTextField;
+	private JTextField summaryTextField;
+	private JTextField categoryTextField;
+	private JButton btnAddItem;
+	private JComboBox typeComboBox;
+	private JComboBox categoryComboBox ;
+	private JButton AddCategoryButton;
+	
+	/**
+	 * Create the panel
+	 */
+	public AddItemPanel() {
+		setBounds(100, 100, 462, 406);
+		this.setBorder(new EmptyBorder(5, 5, 5, 5));
+		this.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("ISBN");
+		lblNewLabel.setBounds(28, 89, 46, 14);
+		this.add(lblNewLabel);
+		
+		JLabel lblNewLabel_2 = new JLabel("Titel");
+		lblNewLabel_2.setBounds(28, 120, 46, 14);
+		this.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Author");
+		lblNewLabel_3.setBounds(28, 145, 46, 14);
+		this.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Category");
+		lblNewLabel_4.setBounds(28, 220, 76, 14);
+		this.add(lblNewLabel_4);
+		
+		isbnTextField = new JTextField();
+		isbnTextField.setBounds(154, 86, 175, 20);
+		this.add(isbnTextField);
+		isbnTextField.setColumns(10);
+		
+		JLabel lblNewLabel_5 = new JLabel("Summary");
+		lblNewLabel_5.setBounds(28, 195, 76, 14);
+		this.add(lblNewLabel_5);
+		
+		JLabel lblNewLabel_6 = new JLabel("Type");
+		lblNewLabel_6.setBounds(28, 170, 60, 14);
+		this.add(lblNewLabel_6);
+		
+		titelTextField = new JTextField();
+		titelTextField.setBounds(154, 117, 175, 20);
+		this.add(titelTextField);
+		titelTextField.setColumns(10);
+		
+		authorTextField = new JTextField();
+		authorTextField.setBounds(154, 142, 175, 20);
+		this.add(authorTextField);
+		authorTextField.setColumns(10);
+		
+		typeTextField = new JTextField();
+		typeTextField.setBounds(228, 22, 175, 20);
+		this.add(typeTextField);
+		typeTextField.setColumns(10);
+		
+		summaryTextField = new JTextField();
+		summaryTextField.setBounds(154, 192, 175, 20);
+		this.add(summaryTextField);
+		summaryTextField.setColumns(10);
+		
+		categoryTextField = new JTextField();
+		categoryTextField.setBounds(154, 249, 175, 20);
+		this.add(categoryTextField);
+		categoryTextField.setColumns(10);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnBack.setBounds(10, 309, 89, 23);
+		this.add(btnBack);
+		
+		btnAddItem = new JButton("Add");
+		btnAddItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnAddItem.setBounds(328, 323, 89, 23);
+		this.add(btnAddItem);
+		
+		typeComboBox = new JComboBox();
+		typeComboBox.setBounds(154, 166, 175, 22);
+		add(typeComboBox);
+		
+		categoryComboBox = new JComboBox();
+		
+		categoryComboBox.setBounds(154, 216, 175, 22);
+		add(categoryComboBox);
+		
+		AddCategoryButton = new JButton("AddCategory");
+		AddCategoryButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		AddCategoryButton.setBounds(350, 216, 102, 23);
+		add(AddCategoryButton);
+	}
+	public void addItemConfirmListener(ActionListener actionListener) {
+        btnAddItem.addActionListener(actionListener);
+    }
+	
+	public JComboBox getTypeCombo() {
+		return typeComboBox;
+	}
+	public void addcomboBoxListener(ActionListener actionListener) {
+		typeComboBox.addActionListener(actionListener);
+    }
+	public JPanel getNewAdherent() {
+		return NewAdherent;
+	}
+	public JTextField getIsbnTextField() {
+		return isbnTextField;
+	}
+	
+	public JTextField getTitelTextField() {
+		return titelTextField;
+	}
+	public JTextField getAuthorTextField() {
+		return authorTextField;
+	}
+	public JTextField getTypeTextField() {
+		return typeTextField;
+	}
+	public JTextField getCategoryTextField() {
+		return categoryTextField;
+	}
+	public JComboBox getTypeComboBox() {
+		return typeComboBox;
+	}
+	public JTextField getSummaryTextField() {
+		// TODO Auto-generated method stub
+		return summaryTextField;
+	}
+}

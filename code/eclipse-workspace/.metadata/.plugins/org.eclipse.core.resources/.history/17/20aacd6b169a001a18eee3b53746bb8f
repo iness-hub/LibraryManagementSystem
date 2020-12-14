@@ -1,0 +1,16 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Librarian;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ServiceClass;
+
+public class LocalMemberInformation {
+	public Member myMemberInfo;
+	public Librarian myLibrarianInfo;
+	private ServiceClass serviceClass;
+
+	public LocalMemberInformation(ServiceClass serviceClass) {
+		super();
+		this.serviceClass = serviceClass;
+			}
+}

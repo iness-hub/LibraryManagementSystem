@@ -1,0 +1,58 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Librarian;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ServiceClass;
+
+public class LocalMemberInformation {
+	public Member myMemberInfo;
+	public Librarian myLibrarianInfo;
+	private ServiceClass serviceClass;
+
+	public LocalMemberInformation(ServiceClass serviceClass) {
+		super();
+		this.serviceClass = serviceClass;
+			}
+	
+	
+public void generateMemberInfo(int userId) {
+		
+		User tempUser =(User) serviceClass.getUserService().get(userId);
+		int id= tempUser.getId();
+		 int roleId = tempUser.getRoleId();
+		 int stateId=tempUser.getStateId();
+		 String username= tempUser.getUsername();
+		 String password = tempUser.getPassword();
+		 String firstname = tempUser.getPerson().getFirstname() ;
+		 String lastname = tempUser.getPerson().getLastname();
+		 String adres = tempUser.getPerson().getAdres();
+		 String email = tempUser.getPerson().getEmail();
+		 int tel = tempUser.getPerson().getTel();
+		 myMemberInfo = new Member(id,roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+		
+		 
+}
+/*public void generatePersonelInfo(int userId) {
+		
+		User tempUser =(User) serviceClass.getUserService().get(userId);
+		int id= tempUser.getId();
+		 int roleId = tempUser.getRoleId();
+		 int stateId=tempUser.getStateId();
+		 String username= tempUser.getUsername();
+		 String password = tempUser.getPassword();
+		 String firstname = tempUser.getPerson().getFirstname() ;
+		 String lastname = tempUser.getPerson().getLastname();
+		 String adres = tempUser.getPerson().getAdres();
+		 String email = tempUser.getPerson().getEmail();
+		 int tel = tempUser.getPerson().getTel();
+		switch (roleId) { 
+		case 1 : myMemberInfo = new Member(id,roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+				break;
+		
+		case 2 : myLibrarianInfo = new Librarian(id,roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+				break;
+			
+		}
+}*/
+}

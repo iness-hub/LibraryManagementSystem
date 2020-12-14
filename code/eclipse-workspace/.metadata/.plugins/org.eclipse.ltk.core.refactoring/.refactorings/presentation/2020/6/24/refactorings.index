@@ -1,0 +1,14 @@
+1591641329231	Rename type 'AddLoanPanel'
+1591642220850	Rename field 'addLoanPanel'
+1591644792326	Rename field 'addLoanPanel'
+1591645116225	Rename field 'manageloansPanel'
+1591648562018	Delete element
+1591695484279	Rename field 'btnCancel'
+1591789933374	Rename field 'table'
+1591876348690	Delete element
+1591895058336	Rename field 'reservationTable'
+1591895449735	Rename local variable 'scrollPane_1'
+1591895831225	Rename type 'MakeReservationPanel'
+1591895849646	Rename type 'ManageReservationPanel'
+1592089400982	Rename method 'GetIdItemrFromMakeReservationPanel'
+1592089410997	Rename method 'GetIdUserFromMakeReservationPanel'

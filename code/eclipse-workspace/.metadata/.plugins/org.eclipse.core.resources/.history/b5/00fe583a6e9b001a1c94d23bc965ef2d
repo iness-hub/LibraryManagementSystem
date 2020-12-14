@@ -1,0 +1,129 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Librarian;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+
+public class AuthenticationDaoDB implements AuthenticationDao {
+	private ConnectSql connectSql;
+	
+	
+	
+	public AuthenticationDaoDB(ConnectSql connectSql) {
+		super();
+		this.connectSql = connectSql;
+	}
+
+	@Override
+	public User login(String username, String password) {
+		
+		String query = "SELECT * FROM USER";
+		query+=" where username='"+username.toString()+"'";
+		query+=	 " and password='"+password.toString()+"'";
+		User user = null;
+		
+		 ResultSet rs=connectSql.selectQuery(query); 
+		try {
+			user = extractUserFromResultSet(rs);
+			System.out.println(user);
+				
+			
+		} catch (SQLException e1) {
+			
+			e1.printStackTrace();
+			System.out.println("niet gevonden");
+			
+		}
+		return user;
+}
+	
+		
+	
+
+	@Override
+	public User register(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private User extractUserFromResultSet(ResultSet rs) throws SQLException {
+
+		int id;
+		String state;
+		String role;
+		String username;
+		String password;
+		String firstname;
+		String lastname;
+		String adres = ""; // rs.getString("adres"); moet nog ingevoerd in database
+		String email;
+		int tel;
+		User user = null;
+		try {
+			if (rs.next()) {
+
+				id = rs.getInt("id");
+				state = rs.getString("state");
+				role = rs.getString("role");
+				username = rs.getString("username");
+				password = rs.getString("password");
+				firstname = rs.getString("firstname");
+				lastname = rs.getString("lastname");
+				adres = ""; // rs.getString("adres");
+				email = rs.getString("email");
+				tel = rs.getInt("tel");
+				switch (role) {
+				case "member":
+					new Member(id, state, username, password, firstname, lastname, adres, email, tel);
+					break;
+				case "librarian":
+					user = new Librarian(id, state, username, password, firstname, lastname, adres, email, tel);
+					break;
+				}			
+			}
+			return user;
+		} catch (SQLException ex) {
+			return null;
+		}
+	}
+	/*private User extractUserFromResultSet(ResultSet rs) throws SQLException {
+
+		int id;
+		int roleId;
+		int stateId;
+		String username;
+		String password;
+		String firstname;
+		String lastname;
+		String adres = ""; // rs.getString("adres");
+		String email;
+		int tel;
+		User user = null;
+
+		try {
+			if (rs.next()) {
+
+				id = rs.getInt("id");
+				roleId = rs.getInt("role_id");
+				stateId = rs.getInt("state_id");
+				username = rs.getString("username");
+				password = rs.getString("password");
+				firstname = rs.getString("firstname");
+				lastname = rs.getString("lastname");
+				adres = ""; // rs.getString("adres");
+				email = rs.getString("email");
+				tel = rs.getInt("tel");
+				
+				 user = new Member(id, roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+			}
+			return user;
+		} catch (SQLException ex) {
+			return null;
+		}
+	}*/
+
+}

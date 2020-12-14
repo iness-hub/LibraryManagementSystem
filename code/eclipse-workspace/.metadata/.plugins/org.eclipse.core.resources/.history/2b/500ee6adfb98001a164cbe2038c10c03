@@ -1,0 +1,70 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.model;
+
+import java.util.ArrayList;
+import java.util.Date;
+
+public class Member extends User{
+	
+	private ArrayList<Operation> operation;
+
+	
+	public Member(int id, int roleId, int stateId, Person person, String username, String password) {
+		super(id, roleId, stateId, person, username, password);
+		// TODO Auto-generated constructor stub
+	}
+
+	
+	public Member(int id, int roleId, int stateId, String username, String password, String firstname, String lastname,
+			String adres, String email, int tel, String state) {
+		super(id, roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+		// TODO Auto-generated constructor stub
+	}
+
+	public Member( int roleId, int stateId, String username, String password, String firstname, String lastname,
+			String adres, String email, int tel) {
+		super( roleId, stateId, username, password, firstname, lastname, adres, email, tel);
+		// TODO Auto-generated constructor stub
+	}
+	public Member(){}
+	
+	
+	public ArrayList<Operation> getOperation()
+	{
+		return operation;
+	}
+
+
+
+	public void setOperation(ArrayList<Operation> operation)
+	{
+		this.operation = operation;
+	}
+
+
+
+	public ArrayList<Loan> consultLoanedItem()
+	{
+		    ArrayList<Loan> loans = new ArrayList<>();
+	        return loans;
+	    
+	} 
+
+	public Boolean makeLoan(Loan loan) 
+	{ 
+	//	loan= new Loan();
+		Boolean succes = false;
+		return succes;
+	}
+	
+	public Boolean reserv(Reservation reservation)
+	{
+		Boolean succes = false;
+		return succes;
+	}
+	
+	public Double calculPenality() 
+	{
+		Double penality = null;
+		return penality;
+	}
+}

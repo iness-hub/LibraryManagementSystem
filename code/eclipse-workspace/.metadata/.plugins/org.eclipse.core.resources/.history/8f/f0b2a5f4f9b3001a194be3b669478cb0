@@ -1,0 +1,233 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Period;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Constants;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CopyItem;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CopyState;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Item;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Librarian;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Loan;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Reservation;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.StateReservation;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.UserState;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.exception.ErrorsLoanException;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.exception.LoanException;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.LoanDao;
+
+public class LoanServiceImpl implements LoanService {
+	LoanDao loanDao;
+	UserService userService;
+	ItemService itemService;
+	StateUserService stateUserService;
+	ReservationService reservationService;
+	CopyItemService copyItemService;
+
+
+	
+	public LoanServiceImpl(LoanDao loanDao, UserService userService, ItemService itemService,CopyItemService copyItemService,
+			StateUserService stateUserService, ReservationService reservationService) {
+		super();
+		this.loanDao = loanDao;
+		this.userService = userService;
+		this.itemService = itemService;
+		this.stateUserService = stateUserService;
+		this.reservationService = reservationService;
+		this.copyItemService = copyItemService;
+	}
+
+
+	@Override
+	public Loan loanCopyItemToMember(User loginUser, int copyId, int userId) throws LoanException {
+		Loan loan = null;
+		if (loginUser instanceof Librarian) {
+			
+			CopyItem copyItem = copyItemService.get(copyId);
+			Reservation hasUserItemReserved = reservationService.hasUserItemReserved(userId, copyItem.getItem().getId());
+			Boolean memberIsAllowedToLoan = userService.memberIsAllowedToLoan(userId);
+			Boolean isCopyItemReserved = copyItemService.isCopyReserved(copyId);
+			Boolean IsCopyAllowedToLoan = copyItemService.isCopyAvailable(copyId);
+			
+			if (memberIsAllowedToLoan) {
+				if (checkMaxLoanToUser(userId)) {
+						if(isCopyItemReserved) {
+							if (hasUserItemReserved != null) {
+							Date operationDate = new Date();
+							Date returnDate = addDays(operationDate, Constants.maxLendingDays);
+							Float penality = null;
+							Date returnedDate = null;
+							loan = new Loan(userId, copyId, operationDate, returnDate, returnedDate, penality);
+							copyItem.setState(CopyState.loaned.toString());
+							loanDao.insert(loan);
+							copyItemService.update(copyItem);
+							hasUserItemReserved.setStateReservation(StateReservation.completed.toString());
+					//		System.out.println("hasUserItemReserved "+hasUserItemReserved.getStateReservation());
+					//		System.out.println("hasUserItemReserved "+hasUserItemReserved.getId());
+							reservationService.update(hasUserItemReserved);
+						} else
+							throw new LoanException(ErrorsLoanException.itemIsReservedByAnotherPerson.toString());
+					} else {
+						if (IsCopyAllowedToLoan) {
+							Date operationDate = new Date();
+							Date returnDate = addDays(operationDate, Constants.maxLendingDays);
+							Float penality = null;
+							Date returnedDate = null;
+							loan = new Loan(userId, copyId, operationDate, returnDate, returnedDate, penality);
+							copyItem.setState(CopyState.loaned.toString());
+							loanDao.insert(loan);
+							copyItemService.update(copyItem);
+
+						} else
+							throw new LoanException(ErrorsLoanException.copyNotAvailableForLoan.toString());
+					}
+
+				} else
+					throw new LoanException(ErrorsLoanException.tooManyLoanBooks.toString()); 
+			} else
+					throw new LoanException(ErrorsLoanException.memberNotActive.toString());
+		}
+		return loan;
+	}
+
+
+	
+	
+
+	@Override
+	public Loan returnCopyItem(int copyId) throws LoanException {
+		CopyItem copyItem = copyItemService.get(copyId);
+		String copyItemState =copyItem.getState().toString();
+		int itemId=copyItemService.get(copyId).getItem().getId();
+
+		Loan loan = loanDao.getLoanedcopyItem(copyId);
+		System.out.print("itemId"+ itemId);
+		if (loan!=null) {
+	//	if( reservationService.IsItemReserved(itemId) ){
+			if (!reservationService.getAlleCurrentReservationsOfItem(itemId).isEmpty()) {
+				
+			System.out.print("IsItemReserved");
+			copyItem.setState(CopyState.reserved.toString());
+			Reservation reservation=reservationService.getAlleCurrentReservationsOfItem(itemId).get(0);
+			reservation.setStateReservation(StateReservation.waitingForLending.toString());
+			reservation.setCopyIdReserved(copyId);
+			reservationService.update(reservation);
+			
+			
+		}	else {
+			System.out.print("Is not ItemReserved");
+		copyItem.setState(CopyState.available.toString());
+		}
+		
+		Date returnedDate = new Date();
+		loan.setReturnedDate(returnedDate);
+		System.out.println(returnedDate.toString());
+
+		copyItemService.update(copyItem);
+		loan.setPenality(penalityAmount(loan));
+		
+		loanDao.update(loan);
+		penalityAmount(loan);
+		return loan;
+	} else {
+		throw new LoanException(ErrorsLoanException.copyAlreadyReturned.toString());
+	}
+	}
+	public Date addDays(Date date, int nbDay) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date); 
+		cal.add(Calendar.DATE, nbDay);
+		return cal.getTime();
+	}
+
+	@Override
+	public Boolean checkMaxLoanToUser(int userId) {
+		return (loanDao.countCurrentLoans(userId) < Constants.maxLoanedItemsToAUser);
+		}
+
+	@Override
+	public float penalityAmount(Loan loan) {
+		Date dateReturned = loan.getReturnedDate();
+		Date returnDate = loan.getReturnDate();
+		float penality = 0;
+		try {
+			long diff = dateReturned.getTime() - returnDate.getTime();
+			float nbDays = (diff / (1000 * 60 * 60 * 24));
+			if (nbDays < 0)
+				nbDays = 0;
+			penality = nbDays * Constants.amountPenalityEachDay;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return penality;
+	}
+
+
+	@Override
+	public Loan get(long id) {
+		return loanDao.get(id);
+		}
+
+
+	@Override
+	public List<Loan> getAll() {
+		return loanDao.getAll();
+	}
+
+
+	@Override
+	public Loan update(Loan loan) {
+			return loanDao.update(loan);
+	}
+
+
+@Override
+	public Loan renewLoanCopyItem(Loan loan) throws LoanException {
+		System.out.println(loan.getReturnedDate() + "renew ");
+	
+		int itemId=copyItemService.get(loan.getCopyId()).getItem().getId();
+	//	Boolean isCopyItemReserved = copyItemService.isCopyReserved(loan.getCopyId());
+		Boolean IsItemReserved = reservationService.IsItemReserved(itemId);
+		IsItemReserved  =  !reservationService.getAlleNotCompletedReservationsOfItem(itemId).isEmpty();
+		System.out.println(itemId + " renew   item id ");
+		System.out.println(loan.getCopyId() + " renew  copyid ");
+		if (loan.getReturnedDate() != null)
+			throw new LoanException(ErrorsLoanException.loanIsReturned.toString());
+		
+		if (!IsItemReserved) {
+			Date returnDate = loan.getReturnDate();
+			Date today = new Date();
+			// Date returnDateRenew = addDays(returnDate, Constants.maxLendingDays);
+			Date returnDateRenew = addDays(today, Constants.maxLendingDays);
+			loan.setReturnDate(returnDateRenew);
+			loanDao.update(loan);
+		} else
+			throw new LoanException(ErrorsLoanException.itemIsReservedByAnotherPerson.toString());
+		return loan;
+	}
+@Override
+public Loan renewLoanCopyItem(int copyId) throws LoanException {
+	
+	Loan loan = loanDao.getLoanedcopyItem(copyId);
+	int itemId= copyItemService.get(copyId).getItem().getId();
+	Boolean isCopyItemReserved = copyItemService.isCopyReserved(copyId);
+	Boolean IsItemReserved = reservationService.IsItemReserved(itemId);
+//	if (!isCopyItemReserved) {
+		if (!IsItemReserved) {
+	Date returnDate =loan.getReturnDate();
+	Date today = new Date();
+//	Date returnDateRenew =  addDays(returnDate, Constants.maxLendingDays);
+	Date returnDateRenew =  addDays(today, Constants.maxLendingDays);
+	loan.setReturnDate(returnDateRenew);
+	loanDao.update(loan);
+	}else throw new LoanException(ErrorsLoanException.itemIsReservedByAnotherPerson.toString());
+	return loan;
+}
+	
+}

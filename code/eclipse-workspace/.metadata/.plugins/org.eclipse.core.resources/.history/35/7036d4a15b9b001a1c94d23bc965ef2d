@@ -1,0 +1,26 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.AuthenticationDao;
+
+public class AuthenticationServiceImpl implements AuthenticationService {
+	private AuthenticationDao authenticationDao;
+
+	public AuthenticationServiceImpl(AuthenticationDao authenticationDao) {
+		super();
+		this.authenticationDao = authenticationDao;
+	}
+
+	@Override
+	public User login(String username, String password) {
+		// TODO Auto-generated method stub
+		return authenticationDao.login(username, password);
+	}
+
+	@Override
+	public User register(User user) {
+		// TODO Auto-generated method stub
+		return authenticationDao.register(user);
+	}
+
+}

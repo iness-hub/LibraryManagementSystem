@@ -1,0 +1,39 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service;
+
+import java.util.List;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.StateUser;
+
+public class StateUserServiceImpl implements StateUserService {
+
+	@Override
+	public StateUser insert(StateUser obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public StateUser update(StateUser obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean delete(StateUser obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public StateUser get(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<StateUser> getAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

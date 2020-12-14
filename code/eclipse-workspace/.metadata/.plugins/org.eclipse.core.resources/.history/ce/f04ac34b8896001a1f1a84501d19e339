@@ -1,0 +1,131 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.service;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Period;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Constants;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.CopyItem;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Item;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Loan;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.Member;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.model.copyState;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.exception.LoanException;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.exception.TooManyLoanBooksException;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.CopyItemDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.ItemDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.LoanDao;
+import com.inesshasnaoui.bibliotheekbeheersysteem.dao.UserDao;
+
+public class LoanServiceImpl implements LoanService {
+	LoanDao loanDao;
+	UserDao userDao;
+	ItemDao itemDao;
+	CopyItemDao copyItemDao;
+	
+	public LoanServiceImpl(LoanDao loanDao,UserDao userDao,ItemDao itemDao,CopyItemDao copyItemDao) {
+		super();
+		this.loanDao = loanDao;
+		this.userDao=userDao;
+		this.itemDao=itemDao;
+		this.copyItemDao=copyItemDao;
+	}
+
+	@Override
+	public Loan loanCopyItemToMember(int copyId, int userId) throws LoanException {
+		
+		User user = userDao.get(userId);
+		Loan loan = null;
+		
+		if (memberIsAllowedToLoan(userId, copyId)) {
+			Date operationDate = new Date();
+			Date returnDate = addDays(operationDate, Constants.maxLendingDays);
+			DateFormat dateFormat = new SimpleDateFormat("yyy-MM-dd");
+			String date = dateFormat.format(operationDate);
+			Float penality = null;
+			Date returnedDate = null;
+
+			loan = new Loan(userId, copyId, operationDate, returnDate, returnedDate, penality);
+			CopyItem copyItem = copyItemDao.get(copyId);
+			copyItem.setState(copyState.loaned.toString());
+
+			loanDao.insert(loan);
+			copyItemDao.update(copyItem);
+
+		}else {
+			
+			throw new TooManyLoanBooksException();
+		}
+		return loan;
+	}
+
+
+	@Override
+	public Loan renewLoanCopyItem(int copyId) {
+		Loan loan = loanDao.getLoanedcopyItem(copyId);
+		
+		Date returnDate =loan.getReturnDate();
+		Date returnDateRenew =  addDays(returnDate, Constants.maxLendingDays);
+		loan.setReturnDate(returnDateRenew);
+		loanDao.update(loan);
+		return loan;
+	}
+
+	@Override
+	public Boolean returnCopyItem(int copyId) {
+		CopyItem copyItem = copyItemDao.get(copyId);
+		copyItem.setState(copyState.available.toString());
+		Loan loan = loanDao.getLoanedcopyItem(copyId);
+		Date returnedDate = new Date();
+		loan.setReturnedDate(returnedDate);
+		System.out.println(returnedDate.toString());
+
+		copyItemDao.update(copyItem);
+		loan.setPenality(penalityAmount(loan));
+		
+		loanDao.update(loan);
+		penalityAmount(loan);
+		return true;
+	}
+
+	public Date addDays(Date date, int nbDay) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date); 
+		cal.add(Calendar.DATE, nbDay);
+		return cal.getTime();
+	}
+
+	@Override
+	public Boolean memberIsAllowedToLoan(int userId) {
+		return ((loanDao.countCurrentLoans(userId) < Constants.maxLoanedItemsToAUser);
+		}
+
+	@Override
+	public Boolean copyIsAllowedToLoan(int copyId) {
+		String state = copyItemDao.get(copyId).getState().toString();
+		return state.equals(copyState.available.toString());
+		}
+	
+	@Override
+	public float penalityAmount(Loan loan) {
+		Date dateReturned = loan.getReturnedDate();
+		Date returnDate = loan.getReturnDate();
+		float penality = 0;
+		try {
+			long diff = dateReturned.getTime() - returnDate.getTime();
+			float nbDays = (diff / (1000 * 60 * 60 * 24));
+			if (nbDays < 0)
+				nbDays = 0;
+			penality = nbDays * Constants.amountPenalityEachDay;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return penality;
+	}
+
+}

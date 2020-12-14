@@ -1,0 +1,5 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.model;
+
+public class UserFactory {
+
+}

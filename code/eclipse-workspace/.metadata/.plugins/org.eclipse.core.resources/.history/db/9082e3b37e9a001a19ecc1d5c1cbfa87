@@ -1,0 +1,91 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.view;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+
+public class LibrarianPanel extends JPanel {
+
+	private JButton btnManageMember;
+	private JButton btnManageItem;
+	private JButton btnManageLoan;
+	private JButton btnReport;
+
+	/**
+	 * Create the panel
+	 */
+	public LibrarianPanel() {
+
+		this.setBorder(new EmptyBorder(5, 5, 5, 5));
+		this.setLayout(null);
+
+		btnManageMember = new JButton("Manage Members");
+		btnManageMember.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+		btnManageMember.setBounds(147, 63, 157, 23);
+		this.add(btnManageMember);
+
+		btnManageItem = new JButton("Manage Items");
+		btnManageItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnManageItem.setBounds(147, 97, 157, 23);
+		this.add(btnManageItem);
+
+		btnManageLoan = new JButton("Manage Loans");
+		btnManageLoan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnManageLoan.setBounds(147, 127, 157, 23);
+		this.add(btnManageLoan);
+
+		btnReport = new JButton("Report");
+		btnReport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnReport.setBounds(147, 161, 157, 23);
+		this.add(btnReport);
+
+		JLabel lblNewLabel = new JLabel("Welcome Librarian");
+		lblNewLabel.setBounds(22, 27, 157, 14);
+		this.add(lblNewLabel);
+
+		JButton btnEsc = new JButton("ESC");
+		btnEsc.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnEsc.setBounds(22, 213, 51, 23);
+		this.add(btnEsc);
+	}
+
+	public void addManageMemberListener(ActionListener actionListener) {
+		btnManageMember.addActionListener(actionListener);
+	}
+
+	public void addManageItemListener(ActionListener actionListener) {
+		btnManageItem.addActionListener(actionListener);
+	}
+
+	public void addReportListener(ActionListener actionListener) {
+		btnReport.addActionListener(actionListener);
+	}
+
+	public void addManageLoanListener(ActionListener actionListener) {
+		btnManageLoan.addActionListener(actionListener);
+	}
+
+}

@@ -1,0 +1,58 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.controller;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.User;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.AuthenticationService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.CategoryService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ItemService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.LoanService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.RoleUserService;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.ServiceClass;
+import com.inesshasanoui.bibliotheekbeheersysteem.service.UserService;
+import com.inesshasanoui.bibliotheekbeheersysteem.view.View;
+
+public class Controller {
+	private View view;
+	/*private UserService userService;
+	private ItemService itemService;
+	private AuthenticationService authenticationService;*/
+	private  ServiceClass serviceClass;
+
+	private LoginController loginController; 
+	private LibrarianController librarianController; 
+	private MemberController memberController; 
+	private ManageMemberController manageMemberController;	
+	private ManageItemController manageItemController;
+	private ManageLoanController manageLoanController;
+	private ManageReportController manageReportController;
+	private LoanService loanService;
+	private CategoryService categoryService;
+	private RoleUserService roleUserService;
+	private User userLogin; 
+
+	
+	public Controller (View view,ServiceClass serviceClass)//UserService userService,ItemService itemService,AuthenticationService authenticationService) 
+	{
+		this.view = view;
+		this.serviceClass=serviceClass;
+		this.loginController = new LoginController(this,view,serviceClass.getAuthenticationService());
+		this.librarianController = new LibrarianController(view,serviceClass.getUserService());
+		this.memberController = new MemberController(view,serviceClass.getUserService());
+		this.manageMemberController= new ManageMemberController(view,serviceClass.getUserService(),serviceClass.getRoleUserService(),serviceClass.getStateUserService());	
+		this.manageItemController= new ManageItemController(view,serviceClass.getItemService(),serviceClass.getCategoryService());
+		this.manageLoanController= new ManageLoanController(view,serviceClass.getLoanService(),serviceClass.getUserService(),serviceClass.getItemService());
+		this.manageReportController= new ManageReportController(view);
+		
+		
+	}
+
+
+	public User getUserLogin() {
+		return userLogin;
+	}
+
+
+	public void setUserLogin(User userLogin) {
+		this.userLogin = userLogin;
+	}
+	
+}

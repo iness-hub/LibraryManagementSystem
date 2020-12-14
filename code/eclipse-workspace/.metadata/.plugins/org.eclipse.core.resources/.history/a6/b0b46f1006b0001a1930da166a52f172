@@ -1,0 +1,8 @@
+package com.inesshasnaoui.bibliotheekbeheersysteem.dao.InterfaceDao;
+
+import com.inesshasanoui.bibliotheekbeheersysteem.model.StateUser;
+
+
+public interface StateUserDao extends CrudDao<StateUser> {
+
+}

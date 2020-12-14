@@ -1,0 +1,31 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.model;
+
+import java.util.List;
+
+public class ItemFactory {
+	
+	public static Item getItem(int id, int isbn, String title, String author, TypeItem type, String summary, Category category, List<CopyItem> copies) {
+		Item item = null;
+		switch (type)  {
+		case book :
+			item = new Book(id, isbn, title, author, type, summary,category,copies);
+			break;
+		case dvd:
+			item = new Dvd(id, isbn, title, author, type, summary,category,copies);
+			break;
+		
+		}
+		return item;
+	}
+	
+	public static TypeItem getTypeItem(Item item ) {
+		
+		TypeItem typeItem = null;
+		if ( item instanceof Book) typeItem= TypeItem.book;
+		else if (item instanceof Dvd)typeItem= TypeItem.dvd;
+		return typeItem;
+	}
+	
+	
+	
+}

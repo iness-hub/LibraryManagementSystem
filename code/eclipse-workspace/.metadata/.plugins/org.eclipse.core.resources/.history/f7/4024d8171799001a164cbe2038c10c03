@@ -1,0 +1,309 @@
+package com.inesshasanoui.bibliotheekbeheersysteem.view;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import javax.swing.JComboBox;
+
+public class ManageMembersPanel extends JPanel {
+	private JTextField textFirstname;
+	private JTextField textLastname;
+	private JTextField textBirthdate;
+	private JTextField textAdres;
+	private JTextField textUsername;
+	private JTextField textPassword;
+	private JTextField textEmail;
+	private JTextField textTel;
+	private JButton btnConfirm;
+	private JComboBox comboBoxRole;
+	private JComboBox comboBoxState; 
+	private JTextField textRoleUser;
+	private JTextField textStateUser;
+	private JTextField textIdUser;
+	private JButton btnAddMember;
+	private JButton btnConsult;
+	/**
+	 * 
+	 * Create the panel.
+	 */
+	public ManageMembersPanel() {
+
+		this.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setLayout(null);
+
+		JLabel lblFirstname = new JLabel("First Name");
+		lblFirstname.setBounds(36, 135, 108, 14);
+		this.add(lblFirstname);
+
+		JLabel lblLastname = new JLabel("Last Name");
+		lblLastname.setBounds(36, 161, 127, 14);
+		this.add(lblLastname);
+
+		JLabel lblBirthDate = new JLabel("Birth date");
+		lblBirthDate.setBounds(36, 237, 127, 14);
+		this.add(lblBirthDate);
+
+		JLabel lblAdres = new JLabel("Adres");
+		lblAdres.setBounds(36, 262, 149, 14);
+		this.add(lblAdres);
+
+		textFirstname = new JTextField();
+		textFirstname.setBounds(195, 127, 226, 20);
+		this.add(textFirstname);
+		textFirstname.setColumns(10);
+
+		textLastname = new JTextField();
+		textLastname.setBounds(195, 150, 226, 20);
+		this.add(textLastname);
+		textLastname.setColumns(10);
+
+		textBirthdate = new JTextField();
+		textBirthdate.setBounds(195, 226, 226, 20);
+		this.add(textBirthdate);
+		textBirthdate.setColumns(10);
+
+		textAdres = new JTextField();
+		textAdres.setBounds(195, 251, 226, 20);
+		this.add(textAdres);
+		textAdres.setColumns(10);
+
+		btnConfirm = new JButton("Confirm");
+		btnConfirm.setBounds(403, 403, 108, 35);
+		btnConfirm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+		this.add(btnConfirm);
+
+		JLabel lblNewLabel = new JLabel("Username");
+		lblNewLabel.setBounds(36, 186, 127, 14);
+		this.add(lblNewLabel);
+
+		textUsername = new JTextField();
+		textUsername.setBounds(195, 175, 226, 20);
+		this.add(textUsername);
+		textUsername.setColumns(10);
+
+		JLabel lblNewLabel_1 = new JLabel("Password");
+		lblNewLabel_1.setBounds(36, 212, 137, 14);
+		this.add(lblNewLabel_1);
+
+		JButton btnEsc = new JButton("Esc");
+		btnEsc.setBounds(88, 403, 108, 35);
+		btnEsc.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		this.add(btnEsc);
+
+		textPassword = new JTextField();
+		textPassword.setBounds(195, 201, 226, 20);
+		this.add(textPassword);
+		textPassword.setColumns(10);
+
+		JLabel lblNewLabel_3 = new JLabel("Email");
+		lblNewLabel_3.setBounds(36, 318, 149, 14);
+		this.add(lblNewLabel_3);
+
+		JLabel lblNewLabel_4 = new JLabel("Phone");
+		lblNewLabel_4.setBounds(36, 293, 149, 14);
+		this.add(lblNewLabel_4);
+
+		textEmail = new JTextField();
+		textEmail.setBounds(195, 310, 226, 21);
+		this.add(textEmail);
+		textEmail.setColumns(10);
+
+		textTel = new JTextField();
+		textTel.setBounds(195, 282, 226, 20);
+		this.add(textTel);
+		textTel.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("Role");
+		lblNewLabel_2.setBounds(36, 32, 21, 14);
+		add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_5 = new JLabel("State");
+		lblNewLabel_5.setBounds(38, 65, 26, 14);
+		add(lblNewLabel_5);
+		
+		 comboBoxRole = new JComboBox();
+		comboBoxRole.setBounds(141, 28, 86, 22);
+		add(comboBoxRole);
+		
+		comboBoxState = new JComboBox();
+		comboBoxState.setBounds(141, 61, 86, 22);
+		add(comboBoxState);
+		
+		textRoleUser = new JTextField();
+		textRoleUser.setBounds(387, 29, 86, 20);
+		add(textRoleUser);
+		textRoleUser.setColumns(10);
+		
+		textStateUser = new JTextField();
+		textStateUser.setBounds(387, 62, 86, 20);
+		add(textStateUser);
+		textStateUser.setColumns(10);
+		
+		JButton btnNewButton = new JButton("Delete");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnNewButton.setBounds(577, 151, 89, 30);
+		add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Update");
+		btnNewButton_1.setBounds(577, 125, 89, 30);
+		add(btnNewButton_1);
+		
+		btnConsult	 = new JButton("Consult");
+		btnConsult.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnConsult.setBounds(577, 97, 89, 30);
+		add(btnConsult);
+		
+		btnAddMember = new JButton("Add");
+		btnAddMember.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnAddMember.setBounds(577, 71, 89, 30);
+		add(btnAddMember);
+		
+		textIdUser = new JTextField();
+		textIdUser.setBounds(195, 94, 226, 20);
+		add(textIdUser);
+		textIdUser.setColumns(10);
+		
+		JLabel lblNewLabel_6 = new JLabel("Id User");
+		lblNewLabel_6.setBounds(36, 105, 108, 14);
+		add(lblNewLabel_6);
+	}
+
+	
+
+	public JTextField getTextFirstname() {
+		return textFirstname;
+	}
+
+	public JTextField getTextLastname() {
+		return textLastname;
+	}
+
+	public JTextField getTextBirthdate() {
+		return textBirthdate;
+	}
+
+	public JTextField getTextAdres() {
+		return textAdres;
+	}
+
+	
+
+	public JTextField getTextUsername() {
+		return textUsername;
+	}
+
+	public JTextField getTextPassword() {
+		return textPassword;
+	}
+
+	public JTextField getTextEmail() {
+		return textEmail;
+	}
+
+	public JTextField getTextTel() {
+		return textTel;
+	}
+
+	public JComboBox getComboBoxRole() {
+		return comboBoxRole;
+	}
+
+	public void setComboBoxRole(JComboBox comboBoxRole) {
+		this.comboBoxRole = comboBoxRole;
+	}
+	
+
+	public JTextField getTextRoleUser() {
+		return textRoleUser;
+	}
+
+
+
+	public void setTextRoleUser(JTextField textRoleUser) {
+		this.textRoleUser = textRoleUser;
+	}
+
+
+
+	public JTextField getTextStateUser() {
+		return textStateUser;
+	}
+
+
+
+	public void setTextStateUser(JTextField textStateUser) {
+		this.textStateUser = textStateUser;
+	}
+
+
+
+	public JTextField getTextIdUser() {
+		return textIdUser;
+	}
+
+
+
+	public void setTextIdUser(JTextField textIdUser) {
+		this.textIdUser = textIdUser;
+	}
+
+
+
+	public JComboBox getComboBoxState() {
+		return comboBoxState;
+	}
+	
+	public void setComboBoxState(JComboBox comboBoxState) {
+		this.comboBoxState = comboBoxState;
+	}
+	public void addcomboBoxRoleListener(ActionListener actionListener) {
+		comboBoxRole.addActionListener(actionListener);
+    }
+	
+	public void addcomboBoxStateListener(ActionListener actionListener) {
+		comboBoxState.addActionListener(actionListener);
+    }
+	
+	
+	public void addMemberListener(ActionListener actionListener) {
+		btnAddMember.addActionListener(actionListener);
+	}
+
+	public void addConfirmMemberListener(ActionListener actionListener) {
+		btnConfirm.addActionListener(actionListener);
+	}
+	public void addConsultListener(ActionListener actionListener) {
+		btnConsult.addActionListener(actionListener);
+	}
+
+	
+}

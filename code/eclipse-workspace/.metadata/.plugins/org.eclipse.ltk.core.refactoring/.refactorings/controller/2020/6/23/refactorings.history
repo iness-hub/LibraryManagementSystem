@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 2 packages to &apos;view/src&apos;&#x0D;&#x0A;- Original project: &apos;controller&apos;&#x0D;&#x0A;- Destination element: &apos;view/src&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     controller/src/com.inesshasanoui.bibliotheekbeheersysteem.view&#x0D;&#x0A;     controller/src/com.inesshasanoui.bibliotheekbeheersysteem.controller&#x0D;&#x0A;- Update references to refactored element" description="Move packages" destination="=view/src" element1="/src&lt;com.inesshasanoui.bibliotheekbeheersysteem.view" element2="/src&lt;com.inesshasanoui.bibliotheekbeheersysteem.controller" flags="589830" fragments="2" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.movePackages" stamp="1591454855552" version="1.0"/>
+</session>
